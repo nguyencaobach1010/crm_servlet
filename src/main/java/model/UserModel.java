@@ -8,6 +8,12 @@ public class UserModel {
     private String avatar;
     private int roleId;
 
+    public UserModel(String email, String password) {
+    }
+
+    public UserModel() {
+    }
+
     public int getId() {
         return id;
     }
