@@ -5,26 +5,13 @@
   /login -> Hello login page
 -->
 <web-app>
-  <display-name>Archetype Created Web Application</display-name>
-<!--  Đăng ký servlet cho servlet container biết -->
-<!--  <servlet>-->
-<!--    <servlet-name>loginServlet</servlet-name>-->
-<!--    <servlet-class>LoginServlet</servlet-class>-->
-<!--  </servlet>-->
-<!--  -->
-<!--  <servlet>-->
-<!--    <servlet-name>signupServlet</servlet-name>-->
-<!--    <servlet-class>SignupServlet</servlet-class>-->
-<!--  </servlet>-->
-<!--&lt;!&ndash;  Đăng ký đường dẫn do servlet nào xử lý&ndash;&gt;-->
-<!--  <servlet-mapping>-->
-<!--    <servlet-name>loginServlet</servlet-name>-->
-<!--    <url-pattern>/login</url-pattern>-->
-<!--  </servlet-mapping>-->
-<!--  -->
-<!--  <servlet-mapping>-->
-<!--    <servlet-name>signupServlet</servlet-name>-->
-<!--    <url-pattern>/signup</url-pattern>-->
-<!--  </servlet-mapping>-->
-
+  <display-name>DemoServlet</display-name>
+  <servlet>
+    <servlet-name>loginController</servlet-name>
+    <servlet-class>controller.LoginController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>loginController</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
 </web-app>

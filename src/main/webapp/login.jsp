@@ -1,4 +1,3 @@
-<%@ page import="model.Users" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -16,25 +15,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-
-<%!
-    int count = 0;
-    Users users = new Users();
-%>
-
-<%
-    //    int kq = (int) request.getAttribute("kq");
-    users.setUsername("nguyenvana");
-    users.setPassword("123456");
-    count++;
-
-    if (count % 2 == 0) {
-%>
-<%--Logic của if thõa điều kiện--%>
-<b style="padding: 20px"><%= users.getUsername() %>
-</b>
-<% } %>
-
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-5 m-auto mt-5">
@@ -45,21 +25,7 @@
                     method : Phương thức gửi tham số cho đường dẫn khai báo ở action
                    JSTL
                 -->
-                <% String contextPath = request.getContextPath(); %>
-                <h1>${msg}</h1>
-                <b>${user.username}</b>
-                <b>${user.getPassword()}</b>
-                <c:out value="${msg}"/>
-                <c:if test="${user.password == '123'}">
-                    <!-- nội dung thõa điều kện if -->
-                    Mật khẩu của bạn là ${user.getPassword()}
-                </c:if>
-
-                <c:forEach items="${list}" var="item">
-                    <!-- Từng phần tử trong list hoặc mảng -->
-                    <b>${item}</b>
-                </c:forEach>
-
+                <% String contextPath = request.getContextPath();%>
                 <form action="<%=contextPath%>/login" method="post">
                     <div class="form-group">
                         <label>Email</label>

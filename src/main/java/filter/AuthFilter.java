@@ -8,7 +8,7 @@ import java.io.IOException;
 
 //urlPatterns : Khi người dùng gọi link được quy định trong đây thì
 // filter sẽ được kích hoạt
-@WebFilter(urlPatterns = {"/login", "/CRM"})
+@WebFilter(urlPatterns = {"/login"})
 public class AuthFilter implements Filter {
 
     @Override

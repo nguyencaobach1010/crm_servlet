@@ -1,12 +1,14 @@
 package repository;
 
 import config.MysqlConfig;
+import model.RoleModel;
 import model.UserModel;
 
 import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,5 +81,99 @@ public class UserRepository {
             }
         }
         return usersModelList;
+    }
+
+    // Lấy thông tin user bằng email
+    public UserModel getUserByEmail(String email) {
+        UserModel userModel = new UserModel();
+        Connection connection = MysqlConfig.getConnection();
+        String query = "select * from users u where u.email=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                userModel.setId(resultSet.getInt("id"));
+                userModel.setEmail(resultSet.getString("email"));
+                userModel.setPassword(resultSet.getString("password"));
+                userModel.setFullname(resultSet.getString("fullname"));
+                userModel.setAvatar(resultSet.getString("avatar"));
+
+                RoleModel roleModel = new RoleModel();
+                roleModel.setId(resultSet.getInt("role_id"));
+                userModel.setRoleModel(roleModel);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                connection.close();
+            } catch (Exception e) {
+
+            }
+        }
+
+        return userModel;
+    }
+
+    public boolean insertUser(String fullname, String email, String password, int roleId){
+        Connection connection = null;
+        boolean isSucess = false;
+        try{
+            connection = MysqlConfig.getConnection();
+            String sql = "INSERT INTO users(email, password, fullname, role_id) values(?,?,?,?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,email);
+            statement.setString(2, password);
+            statement.setString(3, fullname);
+            statement.setInt(4, roleId);
+
+            isSucess = statement.executeUpdate() > 0;
+            connection.close();
+        }catch (Exception e){
+            System.out.println("Lỗi đóng thực thi insertUser" + e.getMessage());
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                }catch (Exception e){
+                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
+                }
+            }
+        }
+        return isSucess;
+    }
+    /*
+        Hiển thị danh sách role từ database ra màn hình
+        Thế role id cứng thành role động người dùng chọn ở giao diện
+
+     */
+
+    public boolean deleteUser(int id){
+        Connection connection = null;
+        boolean isSucess = false;
+        try{
+            connection = MysqlConfig.getConnection();
+            String sql = "DELETE FROM users as u WHERE u.id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, id);
+
+            isSucess = statement.executeUpdate() > 0;
+            System.out.println(isSucess);
+            connection.close();
+        }catch (Exception e){
+            System.out.println("Lỗi đóng thực thi deleteUser" + e.getMessage());
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                }catch (Exception e){
+                    System.out.println("Lỗi đóng kết nối deleteById " + e.getMessage());
+                }
+            }
+        }
+        return isSucess;
     }
 }

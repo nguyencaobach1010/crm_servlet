@@ -8,6 +8,9 @@ public class UserModel {
     private String avatar;
     private int roleId;
 
+    private RoleModel roleModel;
+
+
     public UserModel(String email, String password) {
     }
 
@@ -60,5 +63,13 @@ public class UserModel {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
+    }
+
+    public RoleModel getRoleModel() {
+        return roleModel;
+    }
+
+    public void setRoleModel(RoleModel roleModel) {
+        this.roleModel = roleModel;
     }
 }

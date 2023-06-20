@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,14 +16,12 @@
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Menu CSS -->
     <link href="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <!-- animation CSS -->
     <link href="css/animate.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet">
     <!-- color CSS -->
     <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
-    <link rel="stylesheet" href="./css/custom.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -94,8 +92,8 @@
                                                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="user.jsp" class="waves-effect"><i class="fa fa-user fa-fw"
-                                                                      aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
+                    <a href="user-table.jsp" class="waves-effect"><i class="fa fa-user fa-fw"
+                                                                     aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                 </li>
                 <li>
                     <a href="role-table.jsp" class="waves-effect"><i class="fa fa-modx fa-fw"
@@ -107,7 +105,7 @@
                 </li>
                 <li>
                     <a href="task.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
-                                                               aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
+                                                               aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                 </li>
                 <li>
                     <a href="blank.jsp" class="waves-effect"><i class="fa fa-columns fa-fw"
@@ -126,52 +124,44 @@
         <div class="container-fluid">
             <div class="row bg-title">
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                    <h4 class="page-title">Danh sách thành viên</h4>
+                    <h4 class="page-title">Thêm mới dự án</h4>
                 </div>
-                <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-                    <a href="<c:url value="/user/add"/>" class="btn btn-sm btn-success">Thêm mới</a>
-                </div>
-                <!-- /.col-lg-12 -->
             </div>
-            <!-- /row -->
+            <!-- /.row -->
+            <!-- .row -->
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-md-2 col-12"></div>
+                <div class="col-md-8 col-xs-12">
                     <div class="white-box">
-                        <div class="table-responsive">
-                            <table class="table" id="example">
-                                <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Email</th>
-                                    <th>FullName</th>
-                                    <th>Avatar</th>
-                                    <th>Role</th>
-                                    <th>#</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <c:forEach var="item" items="${listUsers}">
-                                    <tr>
-                                        <td>${item.getId()}</td>
-                                        <td>${item.getEmail()}</td>
-                                        <td>${item.getFullname()}</td>
-                                        <td>${item.getAvatar()}</td>
-                                        <td></td>
-                                        <td>
-                                            <a href="#" class="btn btn-sm btn-primary">Sửa</a>
-<%--                                            <a href="<c:url value="/user/delete?id=${item.getId()}" />" class="btn btn-sm btn-danger">Xóa</a>--%>
-                                            <a href="#" user-id="${item.getId()}" class="btn btn-sm btn-danger btn-delete-user">Xóa</a>
-                                            <a href="user-details.jsp" class="btn btn-sm btn-info">Xem</a>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-
-
-                                </tbody>
-                            </table>
-                        </div>
+                        <form class="form-horizontal form-material">
+                            <div class="form-group">
+                                <label class="col-md-12">Tên dự án</label>
+                                <div class="col-md-12">
+                                    <input type="text" placeholder="Tên công việc"
+                                           class="form-control form-control-line"> </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12">Ngày bắt đầu</label>
+                                <div class="col-md-12">
+                                    <input type="text" placeholder="dd/MM/yyyy"
+                                           class="form-control form-control-line"> </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12">Ngày kết thúc</label>
+                                <div class="col-md-12">
+                                    <input type="text" placeholder="dd/MM/yyyy"
+                                           class="form-control form-control-line"> </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-success">Lưu lại</button>
+                                    <a href="groupwork.jsp" class="btn btn-primary">Quay lại</a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
+                <div class="col-md-2 col-12"></div>
             </div>
             <!-- /.row -->
         </div>
@@ -189,18 +179,10 @@
 <script src="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
 <!--slimscroll JavaScript -->
 <script src="js/jquery.slimscroll.js"></script>
-<script src="js/jquery.dataTables.js"></script>
 <!--Wave Effects -->
 <script src="js/waves.js"></script>
 <!-- Custom Theme JavaScript -->
 <script src="js/custom.min.js"></script>
-<script src="<c:url value=" js/user-table.js"/>"></script>
-
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
 </body>
 
 </html>
