@@ -159,8 +159,7 @@
                                         <td></td>
                                         <td>
                                             <a href="#" class="btn btn-sm btn-primary">Sửa</a>
-<%--                                            <a href="<c:url value="/user/delete?id=${item.getId()}" />" class="btn btn-sm btn-danger">Xóa</a>--%>
-                                            <a href="#" user-id="${item.getId()}" class="btn btn-sm btn-danger btn-delete-user">Xóa</a>
+                                            <span user-id= "${item.getId()}" class="btn btn-sm btn-danger btn-delete-user">Xóa</span>
                                             <a href="user-details.jsp" class="btn btn-sm btn-info">Xem</a>
                                         </td>
                                     </tr>
@@ -194,7 +193,7 @@
 <script src="js/waves.js"></script>
 <!-- Custom Theme JavaScript -->
 <script src="js/custom.min.js"></script>
-<script src="<c:url value=" js/user-table.js"/>"></script>
+<script src="<c:url value=" js/user-table.js?version=1"/>"></script>
 
 <script>
     $(document).ready(function () {

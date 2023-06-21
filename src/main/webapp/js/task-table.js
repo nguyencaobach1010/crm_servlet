@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    $(".btn-delete-user").click(function () {
-        var id = $(this).attr("user-id")
+    $(".btn-delete-task").click(function () {
+        var id = $(this).attr("task-id")
         var This = $(this)
         alert("Xóa thành công!!!")
         $.ajax({

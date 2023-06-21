@@ -1,14 +1,19 @@
 package model;
 
+
+import java.util.Date;
+
 public class TaskModel {
 
     private int id;
     private String name;
-    private String startDate;
-    private String endDate;
-    private String performer;
-    private String jobName;
-    private String statusName;
+
+    private Date startDate;
+    private Date endDate;
+
+    private int userId;
+    private int jobId;
+    private int statusId;
 
     public int getId() {
         return id;
@@ -26,43 +31,43 @@ public class TaskModel {
         this.name = name;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    public String getPerformer() {
-        return performer;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setPerformer(String performer) {
-        this.performer = performer;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getJobName() {
-        return jobName;
+    public int getJobId() {
+        return jobId;
     }
 
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
     }
 
-    public String getStatusName() {
-        return statusName;
+    public int getStatusId() {
+        return statusId;
     }
 
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
     }
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.net.httpserver.Authenticator;
 import model.RoleModel;
 import model.UserModel;
 import service.UserService;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "userController", urlPatterns = {"/user", "/user/add","/user/edit","/user/delete",})
+@WebServlet(name = "userController", urlPatterns = {"/user", "/user/add", "/user/edit", "/user/delete",})
 public class UserController extends HttpServlet {
     private final UserService userService = new UserService();
 
@@ -29,8 +30,10 @@ public class UserController extends HttpServlet {
             case "/user/edit":
                 addUser(req, resp);
                 break;
+            case "/user/delete":
+                deleteUser(req, resp);
+                break;
             default:
-
                 break;
         }
     }
@@ -57,7 +60,7 @@ public class UserController extends HttpServlet {
         req.getRequestDispatcher("user-table.jsp").forward(req, resp);
     }
 
-    private void addUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    private void addUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String method = req.getMethod();
         List<RoleModel> listRoles = userService.getAllRole();
@@ -66,11 +69,14 @@ public class UserController extends HttpServlet {
             String fullname = req.getParameter("fullname");
             String password = req.getParameter("password");
             int roleId = Integer.parseInt(req.getParameter("role"));
-            userService.insertUser(email,password,fullname,roleId);
+            userService.insertUser(email, password, fullname, roleId);
 
         }
         req.setAttribute("listRoles", listRoles);
         req.getRequestDispatcher("/user-add.jsp").forward(req, resp);
     }
-
+    private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id =  Integer.parseInt(req.getParameter("id"));
+        boolean isSucess = userService.deleteUser(id);
+    }
 }
