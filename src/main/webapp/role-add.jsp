@@ -43,7 +43,7 @@
                 <i class="fa fa-bars"></i>
             </a>
             <div class="top-left-part">
-                <a class="logo" href="index.jsp">
+                <a class="logo" href="<c:url value="/"/>">
                     <b>
                         <img src="<c:url value="/plugins/images/pixeladmin-logo.png"/>" alt="home" />
                     </b>
@@ -88,19 +88,19 @@
         <div class="sidebar-nav navbar-collapse slimscrollsidebar">
             <ul class="nav" id="side-menu">
                 <li style="padding: 10px 0 0;">
-                    <a href="index.jsp" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                    <a href="<c:url value="/"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="user-table.jsp" class="waves-effect"><i class="fa fa-user fa-fw"
+                    <a href="<c:url value="/user"/>" class="waves-effect"><i class="fa fa-user fa-fw"
                                                                      aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                 </li>
                 <li>
-                    <a href="role-table.jsp" class="waves-effect"><i class="fa fa-modx fa-fw"
+                    <a href="<c:url value="/role"/>" class="waves-effect"><i class="fa fa-modx fa-fw"
                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
-                    <a href="groupwork.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/groupwork"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                     aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                 </li>
                 <li>
@@ -137,20 +137,20 @@
                             <div class="form-group">
                                 <label class="col-md-12">Tên quyền</label>
                                 <div class="col-md-12">
-                                    <input type="text" placeholder="Tên quyền"
-                                           class="form-control form-control-line" name="name" />
+                                    <input name="name" type="text" placeholder="Tên quyền"
+                                           class="form-control form-control-line"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12">Mô tả</label>
                                 <div class="col-md-12">
-                                    <input type="text" placeholder="Mô tả" class="form-control form-control-line" name="description"/>
+                                    <input name="description" type="text" placeholder="Mô tả" class="form-control form-control-line"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-success">Add Role</button>
-                                    <a href="role-table.jsp" class="btn btn-primary">Quay lại</a>
+                                    <a href="<c:url value="/role"/>" class="btn btn-primary">Quay lại</a>
                                 </div>
                             </div>
                         </form>
@@ -167,17 +167,17 @@
 </div>
 <!-- /#wrapper -->
 <!-- jQuery -->
-<script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="<c:url value="/plugins/bower_components/jquery/dist/jquery.min.js"/>"></script>
 <!-- Bootstrap Core JavaScript -->
-<script src="bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="<c:url value="/bootstrap/dist/js/bootstrap.min.js"/>"></script>
 <!-- Menu Plugin JavaScript -->
-<script src="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+<script src="<c:url value="/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"/>"></script>
 <!--slimscroll JavaScript -->
-<script src="js/jquery.slimscroll.js"></script>
+<script src="<c:url value="/js/jquery.slimscroll.js"/>"></script>
 <!--Wave Effects -->
-<script src="js/waves.js"></script>
+<script src="<c:url value="/js/waves.js"/>"></script>
 <!-- Custom Theme JavaScript -->
-<script src="js/custom.min.js"></script>
+<script src="<c:url value="/js/custom.min.js"/>"></script>
 </body>
 
 </html>

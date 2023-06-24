@@ -1,5 +1,6 @@
 package controller;
 
+import model.StatusModel;
 import model.TaskModel;
 import service.StatusService;
 import service.TaskSevice;
@@ -40,9 +41,33 @@ public class TaskController extends HttpServlet {
                 break;
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getServletPath();
+        switch (path) {
+            case "/task":
+
+                break;
+            case "/task/add":
+                break;
+            case "/task/edit":
+
+                break;
+            case "/task/delete":
+
+                break;
+            default:
+
+                break;
+        }
+    }
     private void getAllTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<TaskModel> listTask = taskSevice.getAllTasks();
+        List<StatusModel> listStatus = statusService.getStatus();
         req.setAttribute("listTasks", listTask);
+        req.setAttribute("listStatus", listStatus);
+
         req.getRequestDispatcher("task.jsp").forward(req, resp);
     }
 

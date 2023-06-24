@@ -13,22 +13,58 @@ import java.util.List;
 public class StatusRepository {
 
     public List<StatusModel> getStatus() {
-        List<StatusModel> statuses = new ArrayList<>();
+        List<StatusModel> listStatus = new ArrayList<>();
+        Connection connection = MysqlConfig.getConnection();
+        String query = "select * from status s ";
+
         try {
-            Connection connection = MysqlConfig.getConnection();
-            String query = "select * from status";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
-                StatusModel status = new StatusModel();
-                status.setId(rs.getInt("id"));
-                status.setName(rs.getString("name"));
-                statuses.add(status);
+            ResultSet resultSet = connection.prepareStatement(query).executeQuery();
+            while(resultSet.next()) {
+                StatusModel statusModel = new StatusModel();
+                statusModel.setId(resultSet.getInt("id"));
+                statusModel.setName(resultSet.getString("name"));
+
+                listStatus.add(statusModel);
             }
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Error get statuses " + e.getMessage());
+            System.out.println("Lỗi câu query getStatus " + e.getMessage());
+        }finally {
+            try {
+                connection.close();
+            } catch (Exception e) {
+
+            }
         }
-        return statuses;
+        return listStatus;
+    }
+
+    public StatusModel getStatusModelById(int id) {
+        StatusModel statusModel = new StatusModel();
+        Connection connection = MysqlConfig.getConnection();
+        String query = "SELECT * FROM status AS s where s.id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                statusModel.setId(resultSet.getInt("id"));
+                statusModel.setName(resultSet.getString("name"));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Lỗi câu truy vấn getStatusModelById " + e.getMessage());
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception e) {
+
+                }
+            }
+        }
+
+        return statusModel;
     }
 }

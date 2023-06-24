@@ -54,7 +54,7 @@ public class RoleRepository {
             }
 
         } catch (Exception e) {
-            System.out.println("Loi cau truy van getRoleModelById " + e.getMessage());
+            System.out.println("Lỗi câu truy vấn getRoleModelById " + e.getMessage());
         } finally {
             if (connection != null) {
                 try {

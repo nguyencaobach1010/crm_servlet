@@ -9,7 +9,7 @@ public class StatusService {
 
     private StatusRepository statusRepository = new StatusRepository();
 
-    private List<StatusModel> getStatus(){
+    public List<StatusModel> getStatus(){
         return statusRepository.getStatus();
 
     }

@@ -45,7 +45,7 @@
                 <i class="fa fa-bars"></i>
             </a>
             <div class="top-left-part">
-                <a class="logo" href="index.jsp">
+                <a class="logo" href="<c:url value="/"/>">
                     <b>
                         <img src="plugins/images/pixeladmin-logo.png" alt="home" />
                     </b>
@@ -90,15 +90,15 @@
         <div class="sidebar-nav navbar-collapse slimscrollsidebar">
             <ul class="nav" id="side-menu">
                 <li style="padding: 10px 0 0;">
-                    <a href="index.jsp" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                    <a href="<c:url value="/"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="user-table.jsp" class="waves-effect"><i class="fa fa-user fa-fw"
+                    <a href="<c:url value="/user"/>" class="waves-effect"><i class="fa fa-user fa-fw"
                                                                      aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                 </li>
                 <li>
-                    <a href="role-table.jsp" class="waves-effect"><i class="fa fa-modx fa-fw"
+                    <a href="<c:url value="/role"/>" class="waves-effect"><i class="fa fa-modx fa-fw"
                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
@@ -129,7 +129,7 @@
                     <h4 class="page-title">Danh sách dự án</h4>
                 </div>
                 <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-                    <a href="groupwork-add.jsp" class="btn btn-sm btn-success">Thêm mới</a>
+                    <a href="<c:url value="/groupwork/add"/>" class="btn btn-sm btn-success">Thêm mới</a>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -149,28 +149,19 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:forEach var="item" items="${listJobs}">
                                 <tr>
-                                    <td>1</td>
-                                    <td>Phân tích dự án</td>
-                                    <td>22/05/2019</td>
-                                    <td>30/05/2019</td>
+                                    <td>${item.getId()}</td>
+                                    <td>${item.getName()}</td>
+                                    <td>${item.getStartDate()}</td>
+                                    <td>${item.getEndDate()}</td>
                                     <td>
                                         <a href="#" class="btn btn-sm btn-primary">Sửa</a>
-                                        <a href="#" class="btn btn-sm btn-danger">Xóa</a>
+                                        <span job-id= "${item.getId()}" class="btn btn-sm btn-danger btn-delete-job">Xóa</span>
                                         <a href="groupwork-details.jsp" class="btn btn-sm btn-info">Xem</a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Thiết kế hệ thống</td>
-                                    <td>22/05/2019</td>
-                                    <td>30/05/2019</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Sửa</a>
-                                        <a href="#" class="btn btn-sm btn-danger">Xóa</a>
-                                        <a href="groupwork-details.jsp" class="btn btn-sm btn-info">Xem</a>
-                                    </td>
-                                </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -198,6 +189,8 @@
 <script src="js/waves.js"></script>
 <!-- Custom Theme JavaScript -->
 <script src="js/custom.min.js"></script>
+<script src="<c:url value=" js/group-table.js?version=1"/>"></script>
+
 <script>
     $(document).ready(function () {
         $('#example').DataTable();

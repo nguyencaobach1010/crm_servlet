@@ -10,10 +10,13 @@ public class RoleService {
     private RoleRepository rolesRepository = new RoleRepository();
 
     public List<RoleModel> getAllRoles(){
-        RoleRepository roleRepository = new RoleRepository();
-        return roleRepository.getAllRole();
+        return rolesRepository.getAllRole();
     }
 
+    public List<RoleModel> getRoleModelById(int id){
+        RoleModel result = rolesRepository.getRoleModelById(id);
+        return (List<RoleModel>) result;
+    }
     public boolean deleteRoleById(int id) {
         boolean result = rolesRepository.deleteRoleById(id);
         return result;

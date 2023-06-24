@@ -26,6 +26,7 @@ public class RoleController extends HttpServlet {
                 getAllRole(req,resp);
                 break;
             case "/role/add":
+                addRole(req, resp);
                 break;
 
             case "/role/delete":
@@ -73,7 +74,7 @@ public class RoleController extends HttpServlet {
 
         }
         req.setAttribute("listRoles", listRoles);
-        req.getRequestDispatcher("/user-add.jsp").forward(req, resp);
+        req.getRequestDispatcher("/role-add.jsp").forward(req, resp);
     }
 
     private void deleteRole(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
