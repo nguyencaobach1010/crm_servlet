@@ -129,7 +129,7 @@
                     <h4 class="page-title">Danh sách quyền</h4>
                 </div>
                 <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-                    <a href="role-add.jsp" class="btn btn-sm btn-success">Thêm mới</a>
+                    <a href="<c:url value="/role/add"/>" class="btn btn-sm btn-success">Thêm mới</a>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -148,25 +148,17 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:forEach var="item" items="${listRoles}">
                                 <tr>
-                                    <td>1</td>
-                                    <td>ROLE_ADMIN</td>
-                                    <td>Quản trị hệ thống</td>
+                                    <td>${item.getId()}</td>
+                                    <td>${item.getName()}</td>
+                                    <td>${item.getDescription()}</td>
                                     <td>
-                                        <% String contextPath = request.getContextPath();%>
                                         <a href="" class="btn btn-sm btn-primary">Sửa</a>
-                                        <a href="<%=contextPath%>/user/delete" class="btn btn-sm btn-danger">Xóa</a>
+                                        <span role-id= "${item.getId()}" class="btn btn-sm btn-danger btn-delete-role">Xóa</span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>ROLE_USER</td>
-                                    <td>Nhân viên</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Sửa</a>
-                                        <a href="#" class="btn btn-sm btn-danger">Xóa</a>
-                                    </td>
-                                </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -194,6 +186,8 @@
 <script src="js/waves.js"></script>
 <!-- Custom Theme JavaScript -->
 <script src="js/custom.min.js"></script>
+<script src="<c:url value=" js/role-table.js?version=1"/>"></script>
+
 <script>
     $(document).ready(function () {
         $('#example').DataTable();

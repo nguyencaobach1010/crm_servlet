@@ -67,4 +67,57 @@ public class RoleRepository {
 
         return roleModel;
     }
+
+    public boolean deleteRoleById(int id){
+        Connection connection = null;
+        boolean isSucess = false;
+        try{
+            connection = MysqlConfig.getConnection();
+            String sql = "DELETE FROM roles as r WHERE r.id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, id);
+
+            isSucess = statement.executeUpdate() > 0;
+            System.out.println(isSucess);
+            connection.close();
+        }catch (Exception e){
+            System.out.println("Lỗi đóng thực thi deleteRole" + e.getMessage());
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                }catch (Exception e){
+                    System.out.println("Lỗi đóng kết nối deleteRoleById " + e.getMessage());
+                }
+            }
+        }
+        return isSucess;
+    }
+
+    public boolean insertRole(String name, String description){
+        Connection connection = null;
+        boolean isSucess = false;
+        try{
+            connection = MysqlConfig.getConnection();
+            String sql = "INSERT INTO roles(name, description) values(?,?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,name);
+            statement.setString(2, description);
+
+            isSucess = statement.executeUpdate() > 0;
+            connection.close();
+        }catch (Exception e){
+            System.out.println("Lỗi đóng thực thi insertRole" + e.getMessage());
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                }catch (Exception e){
+                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
+                }
+            }
+        }
+        return isSucess;
+    }
 }
