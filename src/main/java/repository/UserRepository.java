@@ -1,6 +1,7 @@
 package repository;
 
 import config.MysqlConfig;
+import dto.UserDTO;
 import model.RoleModel;
 import model.UserModel;
 
@@ -49,25 +50,25 @@ public class UserRepository {
         return usersModelList;
     }
 
-    public List<UserModel> findAll(){
+    public List<UserDTO> findAll(){
         Connection connection = null;
-        List<UserModel> usersModelList = new ArrayList<>();
+        List<UserDTO> usersModelList = new ArrayList<>();
 
         try {
-            String sql = "select * from users u";
+            String sql = "select users.id, users.email, users.fullname, roles.description as  role_description from users inner join roles on   users.role_id = roles.id";
             PreparedStatement statement =  MysqlConfig.getConnection().prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
 
             while(resultSet.next()){
                 //Duyệt từng dòng dữ liệu
-                UserModel userModel = new UserModel();
+                UserDTO userDTO = new UserDTO();
                 //Lấy giá trị của cột chỉ định và lưu vào đối tượng
-                userModel.setId(resultSet.getInt("id"));
-                userModel.setEmail(resultSet.getString("email"));
-                userModel.setFullname(resultSet.getString("fullname"));
-                userModel.setRoleId(resultSet.getInt("role_id"));
+                userDTO.setId(resultSet.getInt("id"));
+                userDTO.setEmail(resultSet.getString("email"));
+                userDTO.setFullname(resultSet.getString("fullname"));
+                userDTO.setRoleName(resultSet.getString("role_description"));
 
-                usersModelList.add(userModel);
+                usersModelList.add(userDTO);
             }
         }catch (Exception e) {
             System.out.println("Error findAll:  " + e.getMessage());

@@ -50,7 +50,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg "
                                        href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i
                 class="fa fa-bars"></i></a>
-            <div class="top-left-part"><a class="logo" href="index.jsp"><b><img
+            <div class="top-left-part"><a class="logo" href="<c:url value="/"/>"><b><img
                     src="plugins/images/pixeladmin-logo.png" alt="home" /></b><span
                     class="hidden-xs"><img src="plugins/images/pixeladmin-text.png" alt="home" /></span></a>
             </div>
@@ -78,19 +78,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="sidebar-nav navbar-collapse slimscrollsidebar">
             <ul class="nav" id="side-menu">
                 <li style="padding: 10px 0 0;">
-                    <a href="index.jsp" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                    <a href="<c:url value="/"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="user-table.jsp" class="waves-effect"><i class="fa fa-user fa-fw"
+                    <a href="<c:url value="/user"/>" class="waves-effect"><i class="fa fa-user fa-fw"
                                                                      aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                 </li>
                 <li>
-                    <a href="role-table.jsp" class="waves-effect"><i class="fa fa-modx fa-fw"
+                    <a href="<c:url value="/role"/>" class="waves-effect"><i class="fa fa-modx fa-fw"
                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
-                    <a href="groupwork.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/groupwork"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                     aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                 </li>
                 <li>

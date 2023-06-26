@@ -1,8 +1,7 @@
 package controller;
 
-import com.sun.net.httpserver.Authenticator;
+import dto.UserDTO;
 import model.RoleModel;
-import model.UserModel;
 import service.UserService;
 
 import javax.servlet.ServletException;
@@ -55,7 +54,7 @@ public class UserController extends HttpServlet {
     }
 
     private void getAllUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<UserModel> list = userService.getAllUsers();
+        List<UserDTO> list = userService.getAllUsers();
         req.setAttribute("listUsers", list);
         req.getRequestDispatcher("user-table.jsp").forward(req, resp);
     }

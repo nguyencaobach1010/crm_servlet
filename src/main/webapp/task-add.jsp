@@ -13,15 +13,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
     <title>Pixel Admin</title>
     <!-- Bootstrap Core CSS -->
-    <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<c:url value="/bootstrap/dist/css/bootstrap.min.css"/>" rel="stylesheet">
     <!-- Menu CSS -->
-    <link href="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
+    <link href="<c:url value="/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css"/>" rel="stylesheet">
     <!-- animation CSS -->
-    <link href="css/animate.css" rel="stylesheet">
+    <link href="<c:url value="/css/animate.css"/>" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="<c:url value="/css/style.css"/>" rel="stylesheet">
     <!-- color CSS -->
-    <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
+    <link href="<c:url value="/css/colors/blue-dark.css"/>" id="theme" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -44,12 +44,12 @@
                 <i class="fa fa-bars"></i>
             </a>
             <div class="top-left-part">
-                <a class="logo" href="index.jsp">
+                <a class="logo" href="<c:url value="/"/>">
                     <b>
-                        <img src="plugins/images/pixeladmin-logo.png" alt="home" />
+                        <img src="<c:url value="/plugins/images/pixeladmin-logo.png"/>" alt="home" />
                     </b>
                     <span class="hidden-xs">
-                            <img src="plugins/images/pixeladmin-text.png" alt="home" />
+                            <img src="<c:url value="/plugins/images/pixeladmin-text.png"/>"  alt="home" />
                         </span>
                 </a>
             </div>
@@ -67,7 +67,7 @@
                 <li>
                     <div class="dropdown">
                         <a class="profile-pic dropdown-toggle" data-toggle="dropdown" href="#">
-                            <img src="plugins/images/users/varun.jpg" alt="user-img" width="36"
+                            <img src="<c:url value="/plugins/images/users/varun.jpg"/>" alt="user-img" width="36"
                                  class="img-circle" />
                             <b class="hidden-xs">Cybersoft</b>
                         </a>
@@ -90,23 +90,23 @@
         <div class="sidebar-nav navbar-collapse slimscrollsidebar">
             <ul class="nav" id="side-menu">
                 <li style="padding: 10px 0 0;">
-                    <a href="index.jsp" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                    <a href="<c:url value="/"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
-                    <a href="user-table.jsp" class="waves-effect"><i class="fa fa-user fa-fw"
+                    <a href="<c:url value="/user"/>" class="waves-effect"><i class="fa fa-user fa-fw"
                                                                      aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                 </li>
                 <li>
-                    <a href="role-table.jsp" class="waves-effect"><i class="fa fa-modx fa-fw"
+                    <a href="<c:url value="/role"/>" class="waves-effect"><i class="fa fa-modx fa-fw"
                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
-                    <a href="groupwork.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/groupwork"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                     aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                 </li>
                 <li>
-                    <a href="task.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/task"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                 </li>
                 <li>
@@ -135,52 +135,62 @@
                 <div class="col-md-2 col-12"></div>
                 <div class="col-md-8 col-xs-12">
                     <div class="white-box">
-                        <form class="form-horizontal form-material">
+                        <form action="<c:url value="/task/add"/>" method="post" class="form-horizontal form-material">
                             <div class="form-group">
                                 <label class="col-md-12">Dự án</label>
                                 <div class="col-md-12">
-                                    <select class="form-control form-control-line">
-                                        <option>Dự án CRM</option>
-                                        <option>Dự án Elearning</option>
-                                        <option>Dự án Rạp chiếu phim</option>
+                                    <select name ="nameJob" class="form-control form-control-line">
+                                        <c:forEach var="item" items="${listJobs}">
+                                            <option value="${item.id}">${item.name}</option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12">Tên công việc</label>
                                 <div class="col-md-12">
-                                    <input type="text" placeholder="Tên công việc"
+                                    <input name="nameProject" type="text" placeholder="Tên công việc"
                                            class="form-control form-control-line">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12">Người thực hiện</label>
                                 <div class="col-md-12">
-                                    <select class="form-control form-control-line">
-                                        <option>Nguyễn Văn Tèo</option>
-                                        <option>Trần Thị Lan</option>
-                                        <option>Cao Ngọc Hiếu</option>
+                                    <select name="namePerformer" class="form-control form-control-line">
+                                        <c:forEach var="item" items="${listUsers}">
+                                            <option value="${item.id}">${item.fullname}</option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12">Ngày bắt đầu</label>
                                 <div class="col-md-12">
-                                    <input type="text" placeholder="dd/MM/yyyy"
+                                    <input name="startDate" type="Date" placeholder="yyyy/MM/dd"
                                            class="form-control form-control-line">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12">Ngày kết thúc</label>
                                 <div class="col-md-12">
-                                    <input type="text" placeholder="dd/MM/yyyy"
+                                    <input name="endDate" type="Date" placeholder="yyyy/MM/dd"
                                            class="form-control form-control-line">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12">Tiến Trình</label>
+                                <div class="col-md-12">
+                                    <select name="statusId" class="form-control form-control-line">
+                                        <c:forEach var="item" items="${listStatus}">
+                                            <option value="${item.id}">${item.name}</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-success">Lưu lại</button>
-                                    <a href="task.jsp" class="btn btn-primary">Quay lại</a>
+                                    <a href="<c:url value="/task"/>" class="btn btn-primary">Quay lại</a>
                                 </div>
                             </div>
                         </form>
@@ -197,17 +207,17 @@
 </div>
 <!-- /#wrapper -->
 <!-- jQuery -->
-<script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="<c:url value="/plugins/bower_components/jquery/dist/jquery.min.js"/>"></script>
 <!-- Bootstrap Core JavaScript -->
-<script src="bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="<c:url value="/bootstrap/dist/js/bootstrap.min.js"/>"></script>
 <!-- Menu Plugin JavaScript -->
-<script src="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+<script src="<c:url value="/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"/>"></script>
 <!--slimscroll JavaScript -->
-<script src="js/jquery.slimscroll.js"></script>
+<script src="<c:url value="/js/jquery.slimscroll.js"/>"></script>
 <!--Wave Effects -->
-<script src="js/waves.js"></script>
+<script src="<c:url value="/js/waves.js"/>"></script>
 <!-- Custom Theme JavaScript -->
-<script src="js/custom.min.js"></script>
+<script src="<c:url value="/js/custom.min.js"/>"></script>
 </body>
 
 </html>

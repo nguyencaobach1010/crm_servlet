@@ -1,5 +1,6 @@
 package service;
 
+import dto.UserDTO;
 import model.RoleModel;
 import model.UserModel;
 import repository.RoleRepository;
@@ -12,7 +13,7 @@ public class UserService {
     private final UserRepository userRepository = new UserRepository();
     private final RoleRepository roleRepository = new RoleRepository();
 
-    public List<UserModel> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userRepository.findAll();
 
     }

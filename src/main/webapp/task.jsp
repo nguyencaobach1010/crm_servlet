@@ -102,11 +102,11 @@
                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
-                    <a href="groupwork.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/groupwork"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                     aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                 </li>
                 <li>
-                    <a href="task.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/task"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                 </li>
                 <li>
@@ -143,24 +143,25 @@
                                 <tr>
                                     <th>STT</th>
                                     <th>Tên Công Việc</th>
-                                    <th>Dự Án</th>
-                                    <th>Người Thực Hiện</th>
                                     <th>Ngày Bắt Đầu</th>
                                     <th>Ngày Kết Thúc</th>
+                                    <th>Dự Án</th>
+                                    <th>Người Thực Hiện</th>
                                     <th>Trạng Thái</th>
                                     <th>Hành Động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach var="item" items="${listTasks}">
+
                                 <tr>
                                     <td>${item.getId()}</td>
                                     <td>${item.getName()}</td>
                                     <td>${item.getStartDate()}</td>
                                     <td>${item.getEndDate()}</td>
-                                    <td>${item.getUserId()}</td>
-                                    <td>${item.getJobId()}</td>
-                                    <td>${item.getStatusId()}</td>
+                                    <td>${item.getJobName()}</td>
+                                    <td>${item.getUserName()}</td>
+                                    <td>${item.getStatusName()}</td>
                                     <td>
                                         <a href="#" class="btn btn-sm btn-primary">Sửa</a>
                                         <span task-id= "${item.getId()}" class="btn btn-sm btn-danger btn-delete-task">Xóa</span>

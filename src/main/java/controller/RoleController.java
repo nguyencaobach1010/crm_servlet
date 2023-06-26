@@ -1,7 +1,6 @@
 package controller;
 
 import model.RoleModel;
-import model.UserModel;
 import service.RoleService;
 
 import javax.servlet.ServletException;

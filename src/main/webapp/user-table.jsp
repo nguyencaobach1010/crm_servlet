@@ -102,11 +102,11 @@
                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
-                    <a href="groupwork.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/groupwork"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                     aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                 </li>
                 <li>
-                    <a href="task.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/task"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                 </li>
                 <li>
@@ -156,7 +156,7 @@
                                         <td>${item.getEmail()}</td>
                                         <td>${item.getFullname()}</td>
                                         <td>${item.getAvatar()}</td>
-                                        <td></td>
+                                        <td>${item.getRoleName()}</td>
                                         <td>
                                             <a href="#" class="btn btn-sm btn-primary">Sửa</a>
                                             <span user-id= "${item.getId()}" class="btn btn-sm btn-danger btn-delete-user">Xóa</span>
@@ -164,7 +164,6 @@
                                         </td>
                                     </tr>
                                 </c:forEach>
-
 
                                 </tbody>
                             </table>
