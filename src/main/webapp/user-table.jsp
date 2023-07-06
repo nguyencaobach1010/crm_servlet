@@ -142,23 +142,23 @@
                                 <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th>Email</th>
                                     <th>FullName</th>
+                                    <th>Email</th>
                                     <th>Avatar</th>
                                     <th>Role</th>
-                                    <th>#</th>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach var="item" items="${listUsers}">
                                     <tr>
                                         <td>${item.getId()}</td>
-                                        <td>${item.getEmail()}</td>
                                         <td>${item.getFullname()}</td>
+                                        <td>${item.getEmail()}</td>
                                         <td>${item.getAvatar()}</td>
                                         <td>${item.getRoleName()}</td>
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-primary">Sửa</a>
+                                            <a href="<c:url value="/user/edit?id=${item.getId()}"/>" class="btn btn-sm btn-primary">Sửa</a>
                                             <span user-id= "${item.getId()}" class="btn btn-sm btn-danger btn-delete-user">Xóa</span>
                                             <a href="user-details.jsp" class="btn btn-sm btn-info">Xem</a>
                                         </td>

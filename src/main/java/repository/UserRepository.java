@@ -84,14 +84,16 @@ public class UserRepository {
         return usersModelList;
     }
 
-    // Lấy thông tin user bằng email
-    public UserModel getUserByEmail(String email) {
-        UserModel userModel = new UserModel();
+
+
+    // Lấy thông tin user bằng id
+    public UserDTO getUserById(int id) {
+        UserDTO userModel = new UserDTO();
         Connection connection = MysqlConfig.getConnection();
-        String query = "select * from users u where u.email=?";
+        String query = "select * from users u where u.id=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, email);
+            statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
@@ -150,7 +152,6 @@ public class UserRepository {
         Thế role id cứng thành role động người dùng chọn ở giao diện
 
      */
-
     public boolean deleteUser(int id){
         Connection connection = null;
         boolean isSucess = false;
@@ -176,5 +177,36 @@ public class UserRepository {
             }
         }
         return isSucess;
+
     }
+    public boolean updateUser(int id, String email, String password, String fullname, int roleId){
+        Connection connection = null;
+        boolean isSucess = false;
+
+        try{
+            connection = MysqlConfig.getConnection();
+            String sql = "UPDATE users SET email = ?, password = ?, fullname = ?, role_id = ? WHERE id =? ";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, email);
+            statement.setString(2, password);
+            statement.setString(3,  fullname);
+            statement.setInt(4, roleId);
+            statement.setInt(5, id);
+
+            isSucess = statement.executeUpdate() > 0;
+            connection.close();
+        }catch (Exception e){
+            System.out.println("Lỗi đóng thực thi updateUser" + e.getMessage());
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                }catch (Exception e){
+                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
+                }
+            }
+        }
+        return isSucess;
+    }
+
 }

@@ -22,6 +22,15 @@ public class UserService {
         return userRepository.insertUser(fullname, email, password, roleId);
     }
 
+    public boolean updateUser(int id, String email, String password, String fullname, int roleId){
+        return userRepository.updateUser(id, email, password, fullname, roleId);
+    }
+
+    // get user by id service o day nhe a bach
+    public UserDTO getUserById(int Id){
+        return userRepository.getUserById(Id);
+    }
+
     public boolean deleteUser(int id) {
         return userRepository.deleteUser(id);
     }
