@@ -13,9 +13,9 @@ public class RoleService {
         return rolesRepository.getAllRole();
     }
 
-    public List<RoleModel> getRoleModelById(int id){
-        RoleModel result = rolesRepository.getRoleModelById(id);
-        return (List<RoleModel>) result;
+    public RoleModel getRoleById(int id){
+        RoleModel result = rolesRepository.getRoleById(id);
+        return  result;
     }
     public boolean deleteRoleById(int id) {
         boolean result = rolesRepository.deleteRoleById(id);
@@ -26,9 +26,7 @@ public class RoleService {
         boolean result = rolesRepository.insertRole(name, description);
         return result;
     }
-//
-//    public boolean updateRole(RoleModel role) {
-//        int result = rolesRepository.updateRole(role);
-//        return result > 0;
-//    }
+    public boolean updateRole(int id, String name, String description){
+        return rolesRepository.updateRole(id, name, description);
+    }
 }

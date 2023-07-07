@@ -173,14 +173,16 @@
                                 <div class="col-sm-12">
                                     <select name="role" class="form-control form-control-line">
                                         <c:forEach var="item" items="${rolelist}">
-                                            <option value="${item.id}">${item.description}</option>
+                                            <option value="${item.getId()}"
+                                                <c:if test="${item.getId() == user.getRoleId()}">selected</c:if>>${item.getDescription()}
+                                            </option>
                                         </c:forEach>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <button user-id="${item.getId()}" type="submit" class="btn btn-success btn-edit-user">Sửa</button>
+                                    <button user-id="${user.getId()}" type="submit" class="btn btn-success btn-edit-user">Sửa</button>
                                     <a href="<c:url value="/user"/>" class="btn btn-primary">Quay lại</a>
                                 </div>
                             </div>
@@ -209,7 +211,7 @@
 <script src="<c:url value="/js/waves.js"/>"></script>
 <!-- Custom Theme JavaScript -->
 <script src="<c:url value="/js/custom.min.js"/>"></script>
-<script src="<c:url value="/js/user-edit.js?version=1"/>"></script>
+<%--<script src="<c:url value="/js/user-edit.js?version=1"/>"></script>--%>
 
 
 </body>

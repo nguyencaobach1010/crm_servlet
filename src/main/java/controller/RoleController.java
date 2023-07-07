@@ -1,5 +1,6 @@
 package controller;
 
+import dto.UserDTO;
 import model.RoleModel;
 import service.RoleService;
 
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "roleController", urlPatterns = {"/role", "/role/add", "/role/delete"})
+@WebServlet(name = "roleController", urlPatterns = {"/role", "/role/add","/role/edit", "/role/delete"})
 public class RoleController extends HttpServlet {
 
     private RoleService roleService = new RoleService();
@@ -27,7 +28,9 @@ public class RoleController extends HttpServlet {
             case "/role/add":
                 addRole(req, resp);
                 break;
-
+            case "/role/edit":
+                updateRoleById(req, resp);
+                break;
             case "/role/delete":
                 deleteRole(req, resp);
 
@@ -46,7 +49,7 @@ public class RoleController extends HttpServlet {
                 addRole(req, resp);
                 break;
             case "/role/edit":
-
+                updateRoleById(req, resp);
                 break;
             case "/role/delete":
 
@@ -79,5 +82,20 @@ public class RoleController extends HttpServlet {
     private void deleteRole(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id =  Integer.parseInt(req.getParameter("id"));
         boolean isSucess = roleService.deleteRoleById(id);
+    }
+
+    private void updateRoleById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        RoleModel role = roleService.getRoleById(id);
+        String method = req.getMethod();
+        if (method.equalsIgnoreCase("post")) {
+
+            String name = req.getParameter("name");
+            String description = req.getParameter("description");
+            roleService.updateRole(id, name, description);
+
+        }
+        req.setAttribute("role", role);
+        req.getRequestDispatcher("/role-edit.jsp").forward(req, resp);
     }
 }

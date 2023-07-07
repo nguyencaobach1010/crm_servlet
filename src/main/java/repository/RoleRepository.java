@@ -38,7 +38,7 @@ public class RoleRepository {
     }
 
     // Lấy role bằng id
-    public RoleModel getRoleModelById(int id) {
+    public RoleModel getRoleById(int id) {
         RoleModel roleModel = new RoleModel();
         Connection connection = MysqlConfig.getConnection();
         String query = "SELECT * FROM roles AS r where r.id = ?";
@@ -109,6 +109,34 @@ public class RoleRepository {
             connection.close();
         }catch (Exception e){
             System.out.println("Lỗi đóng thực thi insertRole" + e.getMessage());
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                }catch (Exception e){
+                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
+                }
+            }
+        }
+        return isSucess;
+    }
+
+    public boolean updateRole(int id, String name, String description){
+        Connection connection = null;
+        boolean isSucess = false;
+
+        try{
+            connection = MysqlConfig.getConnection();
+            String sql = "UPDATE roles SET name = ?, description = ? WHERE id =? ";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, name);
+            statement.setString(2, description);
+            statement.setInt(3,  id);
+
+            isSucess = statement.executeUpdate() > 0;
+            connection.close();
+        }catch (Exception e){
+            System.out.println("Lỗi đóng thực thi updateRole" + e.getMessage());
         }finally {
             if(connection != null){
                 try {

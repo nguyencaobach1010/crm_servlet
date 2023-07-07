@@ -102,10 +102,8 @@ public class UserRepository {
                 userModel.setPassword(resultSet.getString("password"));
                 userModel.setFullname(resultSet.getString("fullname"));
                 userModel.setAvatar(resultSet.getString("avatar"));
+                userModel.setRoleId(resultSet.getInt("role_id"));
 
-                RoleModel roleModel = new RoleModel();
-                roleModel.setId(resultSet.getInt("role_id"));
-                userModel.setRoleModel(roleModel);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -125,7 +123,7 @@ public class UserRepository {
         boolean isSucess = false;
         try{
             connection = MysqlConfig.getConnection();
-            String sql = "INSERT INTO users(email, password, fullname, role_id) values(?,?,?,?)";
+            String sql = "INSERT INTO users(email, password, fullname, role_id) values(?,?,N?,?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1,email);
             statement.setString(2, password);

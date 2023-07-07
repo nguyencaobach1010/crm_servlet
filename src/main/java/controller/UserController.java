@@ -28,13 +28,17 @@ public class UserController extends HttpServlet {
                 addUser(req, resp);
                 break;
             case "/user/edit":
-                updateUserById(req, resp);
+                int id = Integer.parseInt(req.getParameter("id"));
+                UserDTO user = userService.getUserById(id);
+                List<RoleModel> listRoles = userService.getAllRole();
+                req.setAttribute("user", user);
+                req.setAttribute("rolelist", listRoles);
+                req.getRequestDispatcher("/user-edit.jsp").forward(req, resp);
                 break;
             case "/user/delete":
                 deleteUser(req, resp);
                 break;
             case "/user/detail":
-
                 break;
             default:
                 break;
@@ -52,7 +56,6 @@ public class UserController extends HttpServlet {
                 updateUserById(req, resp);
                 break;
             default:
-
                 break;
         }
     }
@@ -86,21 +89,15 @@ public class UserController extends HttpServlet {
     }
 
     private void updateUserById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        UserDTO user = userService.getUserById(id);
-        List<RoleModel> listRoles = userService.getAllRole();
         String method = req.getMethod();
         if (method.equalsIgnoreCase("post")) {
-
+            int id = Integer.parseInt(req.getParameter("id"));
             String email = req.getParameter("email");
             String fullname = req.getParameter("fullname");
             String password = req.getParameter("password");
             int roleId = Integer.parseInt(req.getParameter("role"));
             userService.updateUser(id, email, password, fullname, roleId);
-
         }
-        req.setAttribute("user", user);
-        req.setAttribute("rolelist", listRoles);
-        req.getRequestDispatcher("/user-edit.jsp").forward(req, resp);
+        resp.sendRedirect(req.getContextPath() + "/user");
     }
 }
