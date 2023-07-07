@@ -41,7 +41,7 @@ public class LoginController extends HttpServlet {
             System.out.println("Kiểm tra: " + password);
 
             session.setMaxInactiveInterval(1800);
-            resp.sendRedirect(req.getContextPath() + "/home");
+            resp.sendRedirect(req.getContextPath() + "/user");
         } else {
             req.setAttribute("message", "sai tên đăng nhập hoặc mật khẩu!");
             req.setAttribute("login", isSuccess);

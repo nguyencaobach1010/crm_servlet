@@ -97,5 +97,6 @@ public class RoleController extends HttpServlet {
         }
         req.setAttribute("role", role);
         req.getRequestDispatcher("/role-edit.jsp").forward(req, resp);
+
     }
 }
