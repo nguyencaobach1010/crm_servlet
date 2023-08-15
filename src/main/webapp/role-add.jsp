@@ -1,6 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +12,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
-    <title>Pixel Admin</title>
+    <title>CRM</title>
     <!-- Bootstrap Core CSS -->
     <link href="<c:url value="/bootstrap/dist/css/bootstrap.min.css"/>" rel="stylesheet">
     <!-- Menu CSS -->
@@ -43,7 +44,7 @@
                 <i class="fa fa-bars"></i>
             </a>
             <div class="top-left-part">
-                <a class="logo" href="<c:url value="/"/>">
+                <a class="logo" href="<c:url value="/home"/>">
                     <b>
                         <img src="<c:url value="/plugins/images/pixeladmin-logo.png"/>" alt="home" />
                     </b>
@@ -66,14 +67,14 @@
                 <li>
                     <div class="dropdown">
                         <a class="profile-pic dropdown-toggle" data-toggle="dropdown" href="#">
-                            <img src="<c:url value="/plugins/images/users/varun.jpg"/>" alt="user-img" width="36" class="img-circle" />
-                            <b class="hidden-xs">Cybersoft</b>
+                            <img src="<c:url value="/plugins/images/users/${loginUser.getAvatar()}"/>" alt="user-img" width="36" class="img-circle" />
+                            <b class="hidden-xs"><c:out value="${loginUser.getFullName()}"/></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="profile.jsp">Thông tin cá nhân</a></li>
-                            <li><a href="#">Thống kê công việc</a></li>
+                            <li><a href="<c:url value="/user/profile"/> ">Thông tin cá nhân</a></li>
+                            <li><a href="<c:url value="/user/details?userID=${loginUser.getId()}"/>">Thống kê công việc</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">Đăng xuất</a></li>
+                            <li><a href="<c:url value="/logout"/>">Đăng xuất</a></li>
                         </ul>
                     </div>
                 </li>
@@ -88,32 +89,24 @@
         <div class="sidebar-nav navbar-collapse slimscrollsidebar">
             <ul class="nav" id="side-menu">
                 <li style="padding: 10px 0 0;">
-                    <a href="<c:url value="/"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                    <a href="<c:url value="/home"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
                     <a href="<c:url value="/user"/>" class="waves-effect"><i class="fa fa-user fa-fw"
-                                                                     aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
+                                                                      aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                 </li>
                 <li>
                     <a href="<c:url value="/role"/>" class="waves-effect"><i class="fa fa-modx fa-fw"
-                                                                     aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
+                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
-                    <a href="<c:url value="/groupwork"/>" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/group-work"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                     aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                 </li>
                 <li>
                     <a href="<c:url value="/task"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
-                </li>
-                <li>
-                    <a href="blank.jsp" class="waves-effect"><i class="fa fa-columns fa-fw"
-                                                                aria-hidden="true"></i><span class="hide-menu">Blank Page</span></a>
-                </li>
-                <li>
-                    <a href="404.jsp" class="waves-effect"><i class="fa fa-info-circle fa-fw"
-                                                              aria-hidden="true"></i><span class="hide-menu">Error 404</span></a>
                 </li>
             </ul>
         </div>
@@ -133,23 +126,24 @@
                 <div class="col-md-2 col-12"></div>
                 <div class="col-md-8 col-xs-12">
                     <div class="white-box">
-                        <form action="<c:url value="/role/add"/>" method="post" class="form-horizontal form-material">
+                        <form class="form-horizontal form-material" action="<c:url value="/role/add"/>" method="post">
                             <div class="form-group">
-                                <label class="col-md-12">Tên quyền</label>
+                                <label class="col-md-12" for="role-name">Tên quyền</label>
                                 <div class="col-md-12">
-                                    <input name="name" type="text" placeholder="Tên quyền"
-                                           class="form-control form-control-line"/>
+                                    <input type="text" placeholder="Tên quyền"
+                                           class="form-control form-control-line" name="role-name" id="role-name" required/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-12">Mô tả</label>
+                                <label class="col-md-12" for="description">Mô tả</label>
                                 <div class="col-md-12">
-                                    <input name="description" type="text" placeholder="Mô tả" class="form-control form-control-line"/>
+                                    <input type="text" placeholder="Mô tả"
+                                           class="form-control form-control-line" name="description" id="description" required/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-success">Add Role</button>
+                                    <button type="submit" class="btn btn-success">Thêm quyền</button>
                                     <a href="<c:url value="/role"/>" class="btn btn-primary">Quay lại</a>
                                 </div>
                             </div>
@@ -161,7 +155,7 @@
             <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
-        <footer class="footer text-center"> 2018 &copy; myclass.com </footer>
+        <footer class="footer text-center"> 2023 - Cybersoft </footer>
     </div>
     <!-- /#page-wrapper -->
 </div>

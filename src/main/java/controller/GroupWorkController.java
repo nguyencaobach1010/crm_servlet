@@ -1,105 +1,176 @@
 package controller;
 
-import config.MysqlConfig;
-import model.JobModel;
-import model.RoleModel;
-import service.JobService;
+import dto.GroupWorkDTO;
+import dto.TaskDTO;
+import model.UserModel;
+import service.GroupWorkService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-@WebServlet(name = "groupWorkController", urlPatterns = {"/groupwork", "/groupwork/add", "/groupwork/edit", "/groupwork/delete"})
-
+@WebServlet(name = "groupWorkServlet", urlPatterns = {"/group-work", "/group-work/add", "/group-work/delete", "/group-work/details", "/group-work/edit"})
 public class GroupWorkController extends HttpServlet {
-    private JobService jobService = new JobService();
+    private final GroupWorkService groupWorkService = new GroupWorkService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        HttpSession session = req.getSession();
+        UserModel loginUser = (UserModel) session.getAttribute("LOGIN_USER");
         String path = req.getServletPath();
         switch (path) {
-            case "/groupwork":
-                getAllJob(req, resp);
+            case "/group-work":
+                displayAllGroupWorks(req, resp, loginUser);
                 break;
-            case "/groupwork/add":
-                addJobs(req, resp);
+            case "/group-work/add":
+                addGroupWork(req, resp, loginUser);
                 break;
-            case "/groupwork/edit":
-                updateJobById(req, resp);
+            case "/group-work/details":
+                groupWorkDetails(req, resp, loginUser);
                 break;
-            case "/groupwork/delete":
-                deleteJob(req, resp);
+            case "/group-work/delete":
+                deleteGroupWork(req, resp);
+                break;
+            case "/group-work/edit":
+                editGroupWork(req, resp, loginUser);
+                break;
+            default:
                 break;
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        UserModel loginUser = (UserModel) session.getAttribute("LOGIN_USER");
         String path = req.getServletPath();
         switch (path) {
-            case "/groupwork/add":
-                addJobs(req, resp);
+            case "/group-work/add":
+                addGroupWork(req, resp, loginUser);
                 break;
-            case "/groupwork/edit":
-                updateJobById(req, resp);
-                break;
-            case "/groupwork/delete":
-
+            case "/group-work/edit":
+                editGroupWork(req, resp, loginUser);
                 break;
             default:
-
                 break;
         }
+
     }
-    private void getAllJob(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<JobModel> listJob = jobService.getALlJobs();
-        req.setAttribute("listJobs", listJob);
+
+    private void displayAllGroupWorks(HttpServletRequest req, HttpServletResponse resp, UserModel currentUser) throws ServletException, IOException {
+        List<GroupWorkDTO> listAllGroupWorks = groupWorkService.getAllGroupWork();
+        req.setAttribute("listAllGroupWorks", listAllGroupWorks);
+        req.setAttribute("loginUser", currentUser);
         req.getRequestDispatcher("groupwork.jsp").forward(req, resp);
     }
 
-    private void addJobs(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+    private void addGroupWork(HttpServletRequest req, HttpServletResponse resp, UserModel currentUser) throws ServletException, IOException {
         String method = req.getMethod();
-        List<JobModel> listJob = jobService.getALlJobs();
-        if (method.equalsIgnoreCase("post")) {
-            String name = req.getParameter("name");
-            Date start_date = Date.valueOf(req.getParameter("start_date"));
-            Date end_date = Date.valueOf(req.getParameter("end_date"));
-            jobService.insertJobs(name, start_date, end_date );
-
+        req.setAttribute("loginUser", currentUser);
+        if (currentUser.getRoleId() == 1) {
+            req.setAttribute("leaderList", groupWorkService.getAllUserByRoleId(2));
         }
-        req.setAttribute("listJobs", listJob);
+        if (method.equalsIgnoreCase("post")) {
+            String startDate = req.getParameter("start-date");
+            String endDate = req.getParameter("end-date");
+            String name = req.getParameter("group-work-name");
+            int leaderId = (currentUser.getRoleId() == 1)? Integer.parseInt(req.getParameter("select-leader"))
+                    : currentUser.getId();
+
+            groupWorkService.insertGroupWork(name, Date.valueOf(startDate), Date.valueOf(endDate), leaderId);
+        }
+
         req.getRequestDispatcher("/groupwork-add.jsp").forward(req, resp);
     }
 
-    private void deleteJob(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id =  Integer.parseInt(req.getParameter("id"));
-        boolean isSucess = jobService.deleteJobById(id);
+    private void deleteGroupWork(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int groupWorkId = Integer.parseInt(req.getParameter("groupWorkId"));
+
+        groupWorkService.deleteGroupWorkById(groupWorkId);
+        resp.setContentType("text/plain");
+        resp.getWriter().write("success");
     }
 
-    private void updateJobById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        JobModel job = jobService.getJobById(id);
+    private void groupWorkDetails(HttpServletRequest req, HttpServletResponse resp, UserModel currentUser) throws ServletException, IOException {
+        int leaderId = Integer.parseInt(req.getParameter("leaderId"));
+        int groupWorkId = Integer.parseInt(req.getParameter("groupWorkId"));
+        Optional<UserModel> userModelOptional = groupWorkService.getUserById(leaderId);
+        userModelOptional.ifPresent(userModel -> req.setAttribute("leaderDetails", userModel));
+
+        Optional<GroupWorkDTO> groupWorkOptional = groupWorkService.getGroupWorkById(groupWorkId);
+        groupWorkOptional.ifPresent(groupWorkDTO -> req.setAttribute("groupWorkDetail", groupWorkDTO));
+
+        List<TaskDTO> listNotStartedTasks = groupWorkService.getTasksByGroupWorkIdAndStatusId(groupWorkId, 1);
+        List<TaskDTO> listInProgressTasks = groupWorkService.getTasksByGroupWorkIdAndStatusId(groupWorkId, 2);
+        List<TaskDTO> listCompletedTasks = groupWorkService.getTasksByGroupWorkIdAndStatusId(groupWorkId, 3);
+
+        req.setAttribute("listNotStartedTasks", listNotStartedTasks);
+        req.setAttribute("listInProgressTasks", listInProgressTasks);
+        req.setAttribute("listCompletedTasks", listCompletedTasks);
+
+        Map<String , Integer> averageMap = getAverageRate(listNotStartedTasks.size(), listInProgressTasks.size(), listCompletedTasks.size());
+        req.setAttribute("notStartedTasksRate", averageMap.get("firstRate"));
+        req.setAttribute("inProgressTasksRate", averageMap.get("secondRate"));
+        req.setAttribute("completedTasksRate", averageMap.get("thirdRate"));
+
+        req.setAttribute("loginUser", currentUser);
+        req.getRequestDispatcher("/groupwork-details.jsp").forward(req, resp);
+    }
+
+    private void editGroupWork(HttpServletRequest req, HttpServletResponse resp, UserModel currentUser) throws ServletException, IOException {
         String method = req.getMethod();
-        if (method.equalsIgnoreCase("post")) {
+        Integer groupWorkId = (req.getParameter("groupWorkId") != null)? Integer.parseInt(req.getParameter("groupWorkId")) :
+                null;
 
-            String name = req.getParameter("name");
-            Date startDate = Date.valueOf(req.getParameter("start_date"));
-            Date endDate = Date.valueOf(req.getParameter("end_date"));
-            System.out.println(endDate);
-            jobService.updateJobs(id, name, startDate, endDate);
+        boolean isEdited = false;
 
+        if (groupWorkId != null) {
+            Optional<GroupWorkDTO> groupWorkOptional = groupWorkService.getGroupWorkById(groupWorkId);
+            groupWorkOptional.ifPresent(groupWorkDTO -> req.setAttribute("editedGroupWork", groupWorkDTO));
         }
-        req.setAttribute("job", job);
-        req.getRequestDispatcher("/groupwork-edit.jsp").forward(req, resp);
+        if (currentUser.getRoleId() == 1) {
+            req.setAttribute("leaderList", groupWorkService.getAllUserByRoleId(2));
+        }
+        req.setAttribute("loginUser", currentUser);
+
+        if (method.equalsIgnoreCase("post")) {
+            int editedGroupWork = Integer.parseInt(req.getParameter("editedGroupWork"));
+            String startDate = req.getParameter("start-date");
+            String endDate = req.getParameter("end-date");
+            String name = req.getParameter("group-work-name");
+            int leaderId = (currentUser.getRoleId() == 1)? Integer.parseInt(req.getParameter("select-leader"))
+                    : currentUser.getId();
+
+            groupWorkService.updateGroupWork(editedGroupWork, name, Date.valueOf(startDate), Date.valueOf(endDate), leaderId);
+            isEdited = true;
+            resp.sendRedirect(req.getContextPath() + "/group-work");
+        }
+
+        if (!isEdited) {
+            req.getRequestDispatcher("/groupwork-edit.jsp").forward(req, resp);
+        }
     }
 
+    private Map<String, Integer> getAverageRate(int firstNumber, int secondNumber, int thirdNumber) {
+        Map<String, Integer> map = new HashMap<>(3);
 
+        int total = firstNumber + secondNumber + thirdNumber;
+        int firstRate = Math.round((float)100* firstNumber/ total);
+        int secondRate = Math.round((float)100* secondNumber/ total);
+        int thirdRate = Math.round((float)100* thirdNumber/ total);
+
+        map.put("firstRate", firstRate);
+        map.put("secondRate", secondRate);
+        map.put("thirdRate", thirdRate);
+        return map;
+    }
 }

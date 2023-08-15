@@ -1,6 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
-    <title>Pixel Admin</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/plugins/images/favicon.png"/>">
+    <title>CRM</title>
     <!-- Bootstrap Core CSS -->
     <link href="<c:url value="/bootstrap/dist/css/bootstrap.min.css"/>" rel="stylesheet">
     <!-- Menu CSS -->
@@ -43,7 +43,7 @@
                 <i class="fa fa-bars"></i>
             </a>
             <div class="top-left-part">
-                <a class="logo" href="<c:url value="/"/>">
+                <a class="logo" href="<c:url value="/home"/> ">
                     <b>
                         <img src="<c:url value="/plugins/images/pixeladmin-logo.png"/>" alt="home" />
                     </b>
@@ -66,14 +66,14 @@
                 <li>
                     <div class="dropdown">
                         <a class="profile-pic dropdown-toggle" data-toggle="dropdown" href="#">
-                            <img src="<c:url value="/plugins/images/users/varun.jpg"/>" alt="user-img" width="36" class="img-circle" />
-                            <b class="hidden-xs">Cybersoft</b>
+                            <img src="<c:url value="/plugins/images/users/${loginUser.getAvatar()}"/>" alt="user-img" width="36" class="img-circle" />
+                            <b class="hidden-xs"><c:out value="${loginUser.getFullName()}"/></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="profile.jsp">Thông tin cá nhân</a></li>
-                            <li><a href="#">Thống kê công việc</a></li>
+                            <li><a href="<c:url value="/user/profile"/> ">Thông tin cá nhân</a></li>
+                            <li><a href="<c:url value="/user/details?userID=${loginUser.getId()}"/>">Thống kê công việc</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">Đăng xuất</a></li>
+                            <li><a href="<c:url value="/logout"/>">Đăng xuất</a></li>
                         </ul>
                     </div>
                 </li>
@@ -88,7 +88,7 @@
         <div class="sidebar-nav navbar-collapse slimscrollsidebar">
             <ul class="nav" id="side-menu">
                 <li style="padding: 10px 0 0;">
-                    <a href="<c:url value="/"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                    <a href="<c:url value="/home"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
@@ -100,20 +100,12 @@
                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
-                    <a href="<c:url value="/groupwork"/>" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/group-work"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                     aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                 </li>
                 <li>
-                    <a href="task.jsp" class="waves-effect"><i class="fa fa-table fa-fw"
-                                                               aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
-                </li>
-                <li>
-                    <a href="blank.jsp" class="waves-effect"><i class="fa fa-columns fa-fw"
-                                                                aria-hidden="true"></i><span class="hide-menu">Blank Page</span></a>
-                </li>
-                <li>
-                    <a href="404.jsp" class="waves-effect"><i class="fa fa-info-circle fa-fw"
-                                                              aria-hidden="true"></i><span class="hide-menu">Error 404</span></a>
+                    <a href="<c:url value="/task"/>" class="waves-effect"><i class="fa fa-table fa-fw"
+                                                               aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                 </li>
             </ul>
         </div>
@@ -124,7 +116,7 @@
         <div class="container-fluid">
             <div class="row bg-title">
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                    <h4 class="page-title">Thêm mới dự án</h4>
+                    <h4 class="page-title" style="white-space: nowrap;">Cập nhật dự án / <span>${editedGroupWork.getName()}</span></h4>
                 </div>
             </div>
             <!-- /.row -->
@@ -133,36 +125,43 @@
                 <div class="col-md-2 col-12"></div>
                 <div class="col-md-8 col-xs-12">
                     <div class="white-box">
-                        <form action="<c:url value="/groupwork/edit"/>" method="post" class="form-horizontal form-material">
+                        <form class="form-horizontal form-material" action="<c:url value="/group-work/edit"/>" method="post">
                             <div class="form-group">
-                                <label class="col-md-12">ID</label>
+                                <label class="col-md-12" for="group-work-name">Tên dự án</label>
                                 <div class="col-md-12">
-                                    <input name="id" type="text" value="${job.getId()}" placeholder="ID" readonly
-                                           class="form-control form-control-line"> </div>
+                                    <input type="text" placeholder="Tên dự án"
+                                           class="form-control form-control-line" name="group-work-name" id="group-work-name"
+                                    required>
+                                    <input type="hidden" name="editedGroupWork" value="${editedGroupWork.getId()}" id="editedGroupWork">
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-12">Tên dự án</label>
-                                <div class="col-md-12">
-                                    <input name="name" type="text" value="${job.getName()}" placeholder="Tên công việc"
-                                           class="form-control form-control-line"> </div>
+                                <label class="col-md-12" for="start-date">Ngày bắt đầu</label>
+                                <input type="date" name="start-date" id="start-date"
+                                       class="form-control form-control-line" required>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-12">Ngày bắt đầu</label>
-                                <div class="col-md-12">
-                                    <input name="start_date" type="date" value="${job.getStartDate()}" placeholder="yyyy-MM-dd"
-                                           class="form-control form-control-line"> </div>
+                                <label class="col-md-12" for="end-date">Ngày kết thúc</label>
+                                <input type="date" name="end-date" id="end-date"
+<%--                                       style="width: 100%; height: 30px"--%>
+                                       class="form-control form-control-line" required>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-12">Ngày kết thúc</label>
-                                <div class="col-md-12">
-                                    <input name="end_date" type="date" value="${job.getEndDate()}" placeholder="yyyy-MM-dd"
-                                           class="form-control form-control-line"> </div>
-                            </div>
-
+                            <c:if test="${loginUser.getRoleId()==1}">
+                                <div class="form-group">
+                                    <label class="col-sm-12" for="select-leader">Chọn quản lý dự án</label>
+                                    <div class="col-sm-12">
+                                        <select class="form-control form-control-line" name="select-leader" id="select-leader" required>
+                                            <c:forEach var="leader" items="${leaderList}">
+                                                <option value="${leader.getId()}">${leader.getFullName()}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                            </c:if>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-success">Lưu lại</button>
-                                    <a href="<c:url value="/groupwork"/>" class="btn btn-primary">Quay lại</a>
+                                    <button type="submit" class="btn btn-success">Cập nhật</button>
+                                    <a href="<c:url value="/group-work"/>" class="btn btn-primary">Quay lại</a>
                                 </div>
                             </div>
                         </form>
@@ -173,7 +172,7 @@
             <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
-        <footer class="footer text-center"> 2018 &copy; myclass.com </footer>
+        <footer class="footer text-center"> 2023 - Cybersoft </footer>
     </div>
     <!-- /#page-wrapper -->
 </div>

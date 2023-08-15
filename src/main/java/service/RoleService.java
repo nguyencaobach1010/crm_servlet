@@ -4,29 +4,28 @@ import model.RoleModel;
 import repository.RoleRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class RoleService {
+    private final RoleRepository roleRepository = new RoleRepository();
 
-    private RoleRepository rolesRepository = new RoleRepository();
-
-    public List<RoleModel> getAllRoles(){
-        return rolesRepository.getAllRole();
+    public List<RoleModel> getAllRoles() {
+        return roleRepository.findAllRoles();
     }
 
-    public RoleModel getRoleById(int id){
-        RoleModel result = rolesRepository.getRoleById(id);
-        return  result;
-    }
-    public boolean deleteRoleById(int id) {
-        boolean result = rolesRepository.deleteRoleById(id);
-        return result;
+    public boolean deleteRole(int id) {
+        return roleRepository.deleteById(id);
     }
 
-    public boolean insertRole(String name, String description) {
-        boolean result = rolesRepository.insertRole(name, description);
-        return result;
+    public boolean addRole(String name, String desc) {
+        return roleRepository.insertRole(name, desc);
     }
-    public boolean updateRole(int id, String name, String description){
-        return rolesRepository.updateRole(id, name, description);
+
+    public Optional<RoleModel> getRoleById(int id) {
+        return roleRepository.findById(id);
+    }
+
+    public boolean updateRole(int id, String name, String desc) {
+        return roleRepository.update(id, name, desc);
     }
 }

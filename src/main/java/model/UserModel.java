@@ -1,21 +1,12 @@
 package model;
 
+
 public class UserModel {
     private int id;
     private String email;
-    private String password;
-    private String fullname;
+    private String fullName;
     private String avatar;
     private int roleId;
-
-    private RoleModel roleModel;
-
-
-    public UserModel(String email, String password) {
-    }
-
-    public UserModel() {
-    }
 
     public int getId() {
         return id;
@@ -33,20 +24,12 @@ public class UserModel {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getAvatar() {
@@ -65,11 +48,7 @@ public class UserModel {
         this.roleId = roleId;
     }
 
-    public RoleModel getRoleModel() {
-        return roleModel;
-    }
+    public UserModel() {
 
-    public void setRoleModel(RoleModel roleModel) {
-        this.roleModel = roleModel;
     }
 }

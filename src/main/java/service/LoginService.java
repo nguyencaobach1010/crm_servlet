@@ -3,13 +3,18 @@ package service;
 import model.UserModel;
 import repository.UserRepository;
 
-import java.util.List;
+import java.util.Optional;
+
 
 public class LoginService {
+    private final UserRepository userRepository = new UserRepository();
 
-    private UserRepository userRepository = new UserRepository();
-    public boolean checkLogin(String email, String password){
-       List<UserModel> list = userRepository.findByEmailAndPassword(email, password);
-       return list.size() > 0;
+    public boolean checkLogin(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password).isPresent();
     }
+
+    public Optional<UserModel> getUserByEmailAndPassword(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
+    }
+
 }

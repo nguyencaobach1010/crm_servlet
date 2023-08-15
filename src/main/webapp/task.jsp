@@ -1,6 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +12,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
-    <title>Pixel Admin</title>
+    <title>CRM</title>
     <!-- Bootstrap Core CSS -->
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Menu CSS -->
@@ -45,7 +46,7 @@
                 <i class="fa fa-bars"></i>
             </a>
             <div class="top-left-part">
-                <a class="logo" href="<c:url value="/"/>">
+                <a class="logo" href="<c:url value="/home"/>">
                     <b>
                         <img src="plugins/images/pixeladmin-logo.png" alt="home" />
                     </b>
@@ -68,14 +69,14 @@
                 <li>
                     <div class="dropdown">
                         <a class="profile-pic dropdown-toggle" data-toggle="dropdown" href="#">
-                            <img src="plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle" />
-                            <b class="hidden-xs">Cybersoft</b>
+                            <img src="plugins/images/users/${loginUser.getAvatar()}" alt="user-img" width="36" class="img-circle" />
+                            <b class="hidden-xs"><c:out value="${loginUser.getFullName()}"/></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="profile.jsp">Thông tin cá nhân</a></li>
-                            <li><a href="#">Thống kê công việc</a></li>
+                            <li><a href="<c:url value="/user/profile"/> ">Thông tin cá nhân</a></li>
+                            <li><a href="<c:url value="/user/details?userID=${loginUser.getId()}"/>">Thống kê công việc</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">Đăng xuất</a></li>
+                            <li><a href="<c:url value="/logout"/>">Đăng xuất</a></li>
                         </ul>
                     </div>
                 </li>
@@ -90,7 +91,7 @@
         <div class="sidebar-nav navbar-collapse slimscrollsidebar">
             <ul class="nav" id="side-menu">
                 <li style="padding: 10px 0 0;">
-                    <a href="<c:url value="/"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                    <a href="<c:url value="/home"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
@@ -102,20 +103,12 @@
                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
-                    <a href="<c:url value="/groupwork"/>" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/group-work"/>" class="waves-effect"><i class="fa fa-table fa-fw"
                                                                     aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                 </li>
                 <li>
-                    <a href="<c:url value="/task"/>" class="waves-effect"><i class="fa fa-table fa-fw"
+                    <a href="<c:url value="/task"/> " class="waves-effect"><i class="fa fa-table fa-fw"
                                                                 aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
-                </li>
-                <li>
-                    <a href="blank.jsp" class="waves-effect"><i class="fa fa-columns fa-fw"
-                                                                aria-hidden="true"></i><span class="hide-menu">Blank Page</span></a>
-                </li>
-                <li>
-                    <a href="404.jsp" class="waves-effect"><i class="fa fa-info-circle fa-fw"
-                                                              aria-hidden="true"></i><span class="hide-menu">Error 404</span></a>
                 </li>
             </ul>
         </div>
@@ -140,35 +133,50 @@
                         <div class="table-responsive">
                             <table class="table" id="example">
                                 <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Tên Công Việc</th>
-                                    <th>Ngày Bắt Đầu</th>
-                                    <th>Ngày Kết Thúc</th>
-                                    <th>Dự Án</th>
-                                    <th>Người Thực Hiện</th>
-                                    <th>Trạng Thái</th>
-                                    <th>Hành Động</th>
-                                </tr>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên Công Việc</th>
+                                        <th>Dự Án</th>
+                                        <th>Người Thực Hiện</th>
+                                        <th>Ngày Bắt Đầu</th>
+                                        <th>Ngày Kết Thúc</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Hành Động</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach var="item" items="${listTasks}">
-
-                                <tr>
-                                    <td>${item.getId()}</td>
-                                    <td>${item.getName()}</td>
-                                    <td>${item.getStartDate()}</td>
-                                    <td>${item.getEndDate()}</td>
-                                    <td>${item.getJobName()}</td>
-                                    <td>${item.getUserName()}</td>
-                                    <td>${item.getStatusName()}</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Sửa</a>
-                                        <span task-id= "${item.getId()}" class="btn btn-sm btn-danger btn-delete-task">Xóa</span>
-                                        <a href="#" class="btn btn-sm btn-info">Xem</a>
-                                    </td>
-                                </tr>
-                                </c:forEach>
+                                    <c:forEach var="task" items="${listAllTasks}" varStatus="loop">
+                                        <tr>
+                                            <td>${loop.index + 1}</td>
+                                            <td>${task.getTaskName()}</td>
+                                            <td>${task.getGroupWorkName()}</td>
+                                            <td>${task.getUserName()}</td>
+                                            <td><fmt:formatDate pattern="dd-MM-yyyy" value="${task.getStartDate()}"/></td>
+                                            <td><fmt:formatDate pattern="dd-MM-yyyy" value="${task.getEndDate()}"/></td>
+                                            <td>${task.getStatusName()}</td>
+                                            <td>
+                                                <a href="<c:url value="/task/edit?taskId=${task.getId()}&leaderId=${task.getLeaderId()}&userIdTask=${task.getUserId()}"/> "
+                                                   class="btn btn-sm btn-primary">Sửa</a>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-danger btn-delete-task"
+                                                        taskId="${task.getId()}"
+                                                        leaderId="${task.getLeaderId()}">Xóa
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-warning btn-update-task"
+                                                        data-toggle="modal" data-target="#taskModal"
+                                                        group-work-name="${task.getGroupWorkName()}"
+                                                        task-name="${task.getTaskName()}"
+                                                        task-id="${task.getId()}"
+                                                        task-start-date="${task.getStartDate()}"
+                                                        task-end-date="${task.getEndDate()}"
+                                                        style="margin-top: 3.5px;width: 58%"
+                                                        leaderId="${task.getLeaderId()}"
+                                                        user-id="${task.getUserId()}">
+                                                    Cập nhật
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -178,11 +186,71 @@
             <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
-        <footer class="footer text-center"> 2018 &copy; myclass.com </footer>
+        <footer class="footer text-center"> 2023 - Cybersoft </footer>
     </div>
     <!-- /#page-wrapper -->
 </div>
 <!-- /#wrapper -->
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">CẬP NHẬT CÔNG VIỆC</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal form-material">
+                    <div class="form-group">
+                        <label class="col-md-12">Tên dự án</label>
+                        <div class="col-md-12">
+                            <span id="groupWorkName" class="form-control form-control-line"></span>
+                            <input type="hidden" id="leaderID" name="leaderID">
+                            <input type="hidden" id="user-id" name="user-id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12">Tên công việc</label>
+                        <div class="col-md-12">
+                            <span id="taskName" class="form-control form-control-line"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12" for="start-date">Ngày bắt đầu</label>
+                        <input type="date" name="start-date" id="start-date"
+                        <%--                                       style="width: 100%; height: 30px"--%>
+                               class="form-control form-control-line" required >
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12" for="end-date">Ngày kết thúc</label>
+                        <input type="date" name="end-date" id="end-date"
+                        <%--                                       style="width: 100%; height: 30px"--%>
+                               class="form-control form-control-line" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-12" for="select-status">Trạng thái</label>
+                        <div class="col-md-12">
+                            <select class="form-control form-control-line" name="select-status" id="select-status" required>
+                                <c:forEach var="status" items="${listStatus}">
+                                    <option value="${status.getId()}">${status.getName()}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-success btn-save-update" data-dismiss="modal">
+                                Lưu lại
+                            </button>
+                            <button class="btn btn-primary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- jQuery -->
 <script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap Core JavaScript -->
@@ -196,13 +264,12 @@
 <script src="js/waves.js"></script>
 <!-- Custom Theme JavaScript -->
 <script src="js/custom.min.js"></script>
-<script src="<c:url value=" js/task-table.js?version=1"/>"></script>
-
 <script>
     $(document).ready(function () {
         $('#example').DataTable();
     });
 </script>
+<script src="js/task.js"></script>
 </body>
 
 </html>

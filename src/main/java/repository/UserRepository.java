@@ -1,210 +1,194 @@
 package repository;
 
 import config.MysqlConfig;
-import dto.UserDTO;
-import model.RoleModel;
 import model.UserModel;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserRepository {
-
-    public List<UserModel>findByEmailAndPassword(String email, String password){
+    public Optional<UserModel> findByEmailAndPassword(String email, String password) {
         Connection connection = null;
-
-        List<UserModel> usersModelList = new ArrayList<>();
+        Optional<UserModel> userModelOptional = Optional.empty();
         try {
-            String sql = "select * from users u where u.email = ? and u.password = ?";
-            PreparedStatement statement =  MysqlConfig.getConnection().prepareStatement(sql);
+            connection = MysqlConfig.getConnection();
+            String query = "SELECT * FROM users u WHERE u.email = ? AND u.password = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
             statement.setString(2, password);
+
             ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
-                //Duyệt từng dòng dữ liệu
+            if (resultSet.next()) {
                 UserModel userModel = new UserModel();
-                //Lấy giá trị của cột chỉ định và lưu vào đối tượng
+                //Lấy giá trị cột id
                 userModel.setId(resultSet.getInt("id"));
                 userModel.setEmail(resultSet.getString("email"));
-                userModel.setFullname(resultSet.getString("fullname"));
-                userModel.setRoleId(resultSet.getInt("role_id"));
-
-                usersModelList.add(userModel);
-            }
-        }catch (Exception e) {
-            System.out.println("Error findByEmailAndPassword:  " + e.getMessage());
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
-                }
-            }
-        }
-        return usersModelList;
-    }
-
-    public List<UserDTO> findAll(){
-        Connection connection = null;
-        List<UserDTO> usersModelList = new ArrayList<>();
-
-        try {
-            String sql = "select users.id, users.email, users.fullname, roles.description as  role_description from users inner join roles on   users.role_id = roles.id";
-            PreparedStatement statement =  MysqlConfig.getConnection().prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
-
-            while(resultSet.next()){
-                //Duyệt từng dòng dữ liệu
-                UserDTO userDTO = new UserDTO();
-                //Lấy giá trị của cột chỉ định và lưu vào đối tượng
-                userDTO.setId(resultSet.getInt("id"));
-                userDTO.setEmail(resultSet.getString("email"));
-                userDTO.setFullname(resultSet.getString("fullname"));
-                userDTO.setRoleName(resultSet.getString("role_description"));
-
-                usersModelList.add(userDTO);
-            }
-        }catch (Exception e) {
-            System.out.println("Error findAll:  " + e.getMessage());
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
-                }
-            }
-        }
-        return usersModelList;
-    }
-
-
-
-    // Lấy thông tin user bằng id
-    public UserDTO getUserById(int id) {
-        UserDTO userModel = new UserDTO();
-        Connection connection = MysqlConfig.getConnection();
-        String query = "select * from users u where u.id=?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                userModel.setId(resultSet.getInt("id"));
-                userModel.setEmail(resultSet.getString("email"));
-                userModel.setPassword(resultSet.getString("password"));
-                userModel.setFullname(resultSet.getString("fullname"));
+                userModel.setFullName(resultSet.getString("fullname"));
                 userModel.setAvatar(resultSet.getString("avatar"));
                 userModel.setRoleId(resultSet.getInt("role_id"));
-
+                userModelOptional = Optional.of(userModel);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println("Error findByEmailAndPassword: " + e.getMessage());
         } finally {
-            try {
-                connection.close();
-            } catch (Exception e) {
-
-            }
+            MysqlConfig.closeConnection(connection, "findByEmailAndPassword");
         }
-
-        return userModel;
+        return userModelOptional;
     }
 
-    public boolean insertUser(String fullname, String email, String password, int roleId){
+    public List<UserModel> findAllUsers() {
         Connection connection = null;
-        boolean isSucess = false;
-        try{
+        List<UserModel> userModelList = new ArrayList<>();
+        try {
             connection = MysqlConfig.getConnection();
-            String sql = "INSERT INTO users(email, password, fullname, role_id) values(?,?,N?,?)";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1,email);
-            statement.setString(2, password);
-            statement.setString(3, fullname);
-            statement.setInt(4, roleId);
+            String query = "SELECT * FROM users u ORDER BY u.role_id ASC";
+            PreparedStatement statement = connection.prepareStatement(query);
 
-            isSucess = statement.executeUpdate() > 0;
-            connection.close();
-        }catch (Exception e){
-            System.out.println("Lỗi đóng thực thi insertUser" + e.getMessage());
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
-                }
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                UserModel userModel = new UserModel();
+                userModel.setId(resultSet.getInt("id"));
+                userModel.setEmail(resultSet.getString("email"));
+                userModel.setFullName(resultSet.getString("fullname"));
+                userModel.setAvatar(resultSet.getString("avatar"));
+                userModel.setRoleId(resultSet.getInt("role_id"));
+                userModelList.add(userModel);
             }
+        } catch (Exception e) {
+            System.out.println("Error findAllUsers: " + e.getMessage());
+        } finally {
+            MysqlConfig.closeConnection(connection, "findAllUsers");
         }
-        return isSucess;
+        return userModelList;
     }
-    /*
-        Hiển thị danh sách role từ database ra màn hình
-        Thế role id cứng thành role động người dùng chọn ở giao diện
 
-     */
-    public boolean deleteUser(int id){
+    public boolean insertUser(String fullName, String email, String password, String avatar, int roleId) {
+        boolean isSuccess = false;
         Connection connection = null;
-        boolean isSucess = false;
-        try{
+
+        try {
             connection = MysqlConfig.getConnection();
-            String sql = "DELETE FROM users as u WHERE u.id = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
+            String insert = "INSERT INTO users(email, password, fullname, avatar, role_id) " +
+                    "VALUES(?, ?, ?, ?, ?)";
 
-            statement.setInt(1, id);
-
-            isSucess = statement.executeUpdate() > 0;
-            System.out.println(isSucess);
-            connection.close();
-        }catch (Exception e){
-            System.out.println("Lỗi đóng thực thi deleteUser" + e.getMessage());
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    System.out.println("Lỗi đóng kết nối deleteById " + e.getMessage());
-                }
-            }
-        }
-        return isSucess;
-
-    }
-    public boolean updateUser(int id, String email, String password, String fullname, int roleId){
-        Connection connection = null;
-        boolean isSucess = false;
-
-        try{
-            connection = MysqlConfig.getConnection();
-            String sql = "UPDATE users SET email = ?, password = ?, fullname = ?, role_id = ? WHERE id =? ";
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(insert);
             statement.setString(1, email);
             statement.setString(2, password);
-            statement.setString(3,  fullname);
-            statement.setInt(4, roleId);
-            statement.setInt(5, id);
+            statement.setString(3, fullName);
+            statement.setString(4, avatar);
+            statement.setInt(5, roleId);
 
-            isSucess = statement.executeUpdate() > 0;
-            connection.close();
-        }catch (Exception e){
-            System.out.println("Lỗi đóng thực thi updateUser" + e.getMessage());
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
-                }
-            }
+            isSuccess = statement.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            System.out.println("Error at insertUser: " + e.getMessage());
+        } finally {
+            MysqlConfig.closeConnection(connection, "insertUser");
         }
-        return isSucess;
+        return isSuccess;
     }
 
+    public boolean deleteById(int id) {
+        boolean isSuccess = false;
+        Connection connection = null;
+
+        try {
+            connection = MysqlConfig.getConnection();
+            String delete = "DELETE FROM users u WHERE u.id = ?";
+
+            PreparedStatement statement = connection.prepareStatement(delete);
+            statement.setInt(1, id);
+
+            isSuccess = statement.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Error at deleteById(UserRepository): " + e.getMessage());;
+        } finally {
+            MysqlConfig.closeConnection(connection, "deleteById(UserRepository)");
+        }
+        return isSuccess;
+    }
+
+    public Optional<UserModel> findById(int id) {
+        Connection connection = null;
+        Optional<UserModel> userModelOptional = Optional.empty();
+        try {
+            connection = MysqlConfig.getConnection();
+            String query = "SELECT * FROM users u WHERE u.id = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                UserModel userModel = new UserModel();
+                userModel.setId(resultSet.getInt("id"));
+                userModel.setEmail(resultSet.getString("email"));
+                userModel.setFullName(resultSet.getString("fullname"));
+                userModel.setAvatar(resultSet.getString("avatar"));
+                userModel.setRoleId(resultSet.getInt("role_id"));
+                userModelOptional = Optional.of(userModel);
+            }
+        } catch (Exception e) {
+            System.out.println("Error findById: " + e.getMessage());
+        } finally {
+            MysqlConfig.closeConnection(connection, "findById");
+        }
+        return userModelOptional;
+    }
+
+    public boolean update(int id, String fullName, String email, String password, String avatar, int roleId) {
+        boolean isSuccess = false;
+        Connection connection = null;
+        try {
+            String update = "UPDATE users " +
+                    "SET email = ?, password = ?, fullname = ?, avatar = ?, role_id = ? " +
+                    "WHERE id = ?";
+            connection = MysqlConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(update);
+            statement.setString(1, email);
+            statement.setString(2, password);
+            statement.setString(3, fullName);
+            statement.setString(4, avatar);
+            statement.setInt(5, roleId);
+            statement.setInt(6, id);
+
+            isSuccess = statement.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Error update(UserRepository): " + e.getMessage());;
+        } finally {
+            MysqlConfig.closeConnection(connection, "update(UserRepository)");
+        }
+        return isSuccess;
+    }
+
+    public List<UserModel> findAllByRoleId(int roleId) {
+        Connection connection = null;
+        List<UserModel> listUser = new ArrayList<>();
+        try {
+            connection = MysqlConfig.getConnection();
+            String query = "SELECT * FROM users u WHERE u.role_id = ?";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, roleId);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                UserModel userModel = new UserModel();
+                userModel.setId(resultSet.getInt("id"));
+                userModel.setEmail(resultSet.getString("email"));
+                userModel.setFullName(resultSet.getString("fullname"));
+                userModel.setAvatar(resultSet.getString("avatar"));
+                userModel.setRoleId(roleId);
+                listUser.add(userModel);
+            }
+        } catch (Exception e) {
+            System.out.println("Error findAllByRoleId(UserRepository): " + e.getMessage());
+        } finally {
+            MysqlConfig.closeConnection(connection, "findAllByRoleId(UserRepository)");
+        }
+        return listUser;
+    }
 }

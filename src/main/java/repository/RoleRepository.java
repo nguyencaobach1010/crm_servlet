@@ -8,144 +8,120 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RoleRepository {
-    public List<RoleModel> getAllRole() {
-        List<RoleModel> listRoles = new ArrayList<>();
-        Connection connection = MysqlConfig.getConnection();
-        String query = "select * from roles r";
-
+    public List<RoleModel> findAllRoles() {
+        Connection connection = null;
+        List<RoleModel> roleModelList = new ArrayList<>();
         try {
-            ResultSet resultSet = connection.prepareStatement(query).executeQuery();
+            connection = MysqlConfig.getConnection();
+            String query = "SELECT * FROM roles r";
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 RoleModel roleModel = new RoleModel();
                 roleModel.setId(resultSet.getInt("id"));
                 roleModel.setName(resultSet.getString("name"));
                 roleModel.setDescription(resultSet.getString("description"));
-
-                listRoles.add(roleModel);
+                roleModelList.add(roleModel);
             }
         } catch (Exception e) {
-            System.out.println("Lỗi câu query getAllRoles " + e.getMessage());
+            System.out.println("Error findAllRoles: " + e.getMessage());
         } finally {
-            try {
-                connection.close();
-            } catch (Exception e) {
-
-            }
+            MysqlConfig.closeConnection(connection, "findAllRoles");
         }
-        return listRoles;
+        return roleModelList;
     }
 
-    // Lấy role bằng id
-    public RoleModel getRoleById(int id) {
-        RoleModel roleModel = new RoleModel();
-        Connection connection = MysqlConfig.getConnection();
-        String query = "SELECT * FROM roles AS r where r.id = ?";
+    public boolean deleteById(int id) {
+        boolean isSuccess = false;
+        Connection connection = null;
+
         try {
+            connection = MysqlConfig.getConnection();
+            String delete = "DELETE FROM roles r WHERE r.id = ?";
+
+            PreparedStatement statement = connection.prepareStatement(delete);
+            statement.setInt(1, id);
+
+            isSuccess = statement.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Error at deleteById(RoleRepository): " + e.getMessage());;
+        } finally {
+            MysqlConfig.closeConnection(connection, "deleteById(RoleRepository)");
+        }
+        return isSuccess;
+    }
+
+    public boolean insertRole(String name, String desc) {
+        boolean isSuccess = false;
+        Connection connection = null;
+
+        try {
+            connection = MysqlConfig.getConnection();
+            String insert = "INSERT INTO roles(name, description) VALUES(?, ?)";
+
+            PreparedStatement statement = connection.prepareStatement(insert);
+            statement.setString(1, name);
+            statement.setString(2, desc);
+
+            isSuccess = statement.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Error at InsertRole: " + e.getMessage());
+        } finally {
+            MysqlConfig.closeConnection(connection, "insertRole");
+        }
+        return isSuccess;
+    }
+
+    public Optional<RoleModel> findById(int id) {
+        Connection connection = null;
+        Optional<RoleModel> roleModelOptional = Optional.empty();
+        try {
+            connection = MysqlConfig.getConnection();
+            String query = "SELECT * FROM roles r WHERE r.id = ?";
+
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
-                roleModel.setId(resultSet.getInt("id"));
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                RoleModel roleModel = new RoleModel();
+                roleModel.setId(id);
                 roleModel.setName(resultSet.getString("name"));
                 roleModel.setDescription(resultSet.getString("description"));
+                roleModelOptional = Optional.of(roleModel);
             }
-
         } catch (Exception e) {
-            System.out.println("Lỗi câu truy vấn getRoleModelById " + e.getMessage());
+            System.out.println("Error findById(RoleRepository): " + e.getMessage());
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (Exception e) {
-
-                }
-            }
+            MysqlConfig.closeConnection(connection, "findById(RoleRepository)");
         }
-
-        return roleModel;
+        return roleModelOptional;
     }
 
-    public boolean deleteRoleById(int id){
+    public boolean update(int id, String name, String description) {
         Connection connection = null;
-        boolean isSucess = false;
-        try{
+        boolean isSuccess = false;
+
+        try {
             connection = MysqlConfig.getConnection();
-            String sql = "DELETE FROM roles as r WHERE r.id = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
+            String update = "UPDATE roles r SET name = ?, description = ? WHERE r.id = ?";
 
-            statement.setInt(1, id);
-
-            isSucess = statement.executeUpdate() > 0;
-            System.out.println(isSucess);
-            connection.close();
-        }catch (Exception e){
-            System.out.println("Lỗi đóng thực thi deleteRole" + e.getMessage());
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    System.out.println("Lỗi đóng kết nối deleteRoleById " + e.getMessage());
-                }
-            }
-        }
-        return isSucess;
-    }
-
-    public boolean insertRole(String name, String description){
-        Connection connection = null;
-        boolean isSucess = false;
-        try{
-            connection = MysqlConfig.getConnection();
-            String sql = "INSERT INTO roles(name, description) values(?,?)";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1,name);
-            statement.setString(2, description);
-
-            isSucess = statement.executeUpdate() > 0;
-            connection.close();
-        }catch (Exception e){
-            System.out.println("Lỗi đóng thực thi insertRole" + e.getMessage());
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
-                }
-            }
-        }
-        return isSucess;
-    }
-
-    public boolean updateRole(int id, String name, String description){
-        Connection connection = null;
-        boolean isSucess = false;
-
-        try{
-            connection = MysqlConfig.getConnection();
-            String sql = "UPDATE roles SET name = ?, description = ? WHERE id =? ";
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(update);
             statement.setString(1, name);
             statement.setString(2, description);
-            statement.setInt(3,  id);
+            statement.setInt(3, id);
 
-            isSucess = statement.executeUpdate() > 0;
-            connection.close();
-        }catch (Exception e){
-            System.out.println("Lỗi đóng thực thi updateRole" + e.getMessage());
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    System.out.println("Lỗi đóng kết nối login " + e.getMessage());
-                }
-            }
+            isSuccess = statement.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            System.out.println("Error update(RoleRepository): " + e.getMessage());
+        } finally {
+            MysqlConfig.closeConnection(connection, "update(RoleRepository)");
         }
-        return isSucess;
+        return isSuccess;
     }
 }

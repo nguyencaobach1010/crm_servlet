@@ -1,15 +1,13 @@
 $(document).ready(function () {
-
-    $(".btn-delete-user").click(function () {
-        var id = $(this).attr("user-id")
+    $("tbody").on("click", ".btn-delete-user", function () {
+        var id = $(this).attr("userID")
         var This = $(this)
-        alert("Xóa thành công!!!")
         $.ajax({
             method: "GET",
-            url: "http://localhost:8080/CRM/user/delete?id=" + id
-        }).done(function (result) {
+            url: "http://localhost:8080/nvtgroup/user/delete?userID=" + id
+        }).done(function( result ) {
             This.closest("tr").remove()
-            console.log("Ket qua", result)
-        })
+            console.log("Result" + result)
+        });
     })
-});
+})

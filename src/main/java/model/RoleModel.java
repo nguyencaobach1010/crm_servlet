@@ -28,4 +28,8 @@ public class RoleModel {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public RoleModel() {
+
+    }
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/plugins/images/favicon.png"/> ">
     <title>CRM</title>
     <!-- Bootstrap Core CSS -->
     <link href="<c:url value="/bootstrap/dist/css/bootstrap.min.css"/>" rel="stylesheet">
@@ -40,7 +41,8 @@
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top m-b-0">
         <div class="navbar-header">
-            <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse">
+            <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse"
+               data-target=".navbar-collapse">
                 <i class="fa fa-bars"></i>
             </a>
             <div class="top-left-part">
@@ -49,8 +51,8 @@
                         <img src="<c:url value="/plugins/images/pixeladmin-logo.png"/>" alt="home" />
                     </b>
                     <span class="hidden-xs">
-                                <img src="<c:url value="/plugins/images/pixeladmin-text.png"/>" alt="home" />
-                            </span>
+                            <img src="<c:url value="/plugins/images/pixeladmin-text.png"/>" alt="home" />
+                        </span>
                 </a>
             </div>
             <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
@@ -89,24 +91,24 @@
         <div class="sidebar-nav navbar-collapse slimscrollsidebar">
             <ul class="nav" id="side-menu">
                 <li style="padding: 10px 0 0;">
-                    <a href="<c:url value="/home"/>" class="waves-effect"><i class="fa fa-clock-o fa-fw"
-                                                                aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
+                    <a href="<c:url value="/home"/> " class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                                                                               aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                 </li>
                 <li>
                     <a href="<c:url value="/user"/>" class="waves-effect"><i class="fa fa-user fa-fw"
-                                                                      aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
+                                                                             aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                 </li>
                 <li>
                     <a href="<c:url value="/role"/>" class="waves-effect"><i class="fa fa-modx fa-fw"
-                                                                      aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
+                                                                             aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                 </li>
                 <li>
                     <a href="<c:url value="/group-work"/>" class="waves-effect"><i class="fa fa-table fa-fw"
-                                                                    aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
+                                                                                   aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                 </li>
                 <li>
-                    <a href="<c:url value="/task"/>" class="waves-effect"><i class="fa fa-table fa-fw"
-                                                               aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
+                    <a href="<c:url value="/task"/> " class="waves-effect"><i class="fa fa-table fa-fw"
+                                                                              aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                 </li>
             </ul>
         </div>
@@ -117,7 +119,7 @@
         <div class="container-fluid">
             <div class="row bg-title">
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                    <h4 class="page-title" style="white-space: nowrap;">Cập nhật quyền / ${editedRole.getName()}</h4>
+                    <h4 class="page-title"  style="white-space: nowrap;">Chỉnh sửa công việc / ${editedTask.getTaskName()} </h4>
                 </div>
             </div>
             <!-- /.row -->
@@ -126,26 +128,62 @@
                 <div class="col-md-2 col-12"></div>
                 <div class="col-md-8 col-xs-12">
                     <div class="white-box">
-                        <form class="form-horizontal form-material" action="<c:url value="/role/edit"/>" method="post">
+                        <form class="form-horizontal form-material" method="post" action="<c:url value="/task/edit"/> ">
+                            <c:if test="${loginUser.getRoleId()==2}">
+                                <div class="form-group">
+                                    <label class="col-md-12" for="group-work-name">Tên dự án</label>
+                                    <div class="col-md-12">
+                                        <input type="text" readonly value="${editedTask.getGroupWorkName()}" class="form-control form-control-line"
+                                               name="group-work-name" id="group-work-name" required>
+                                        <input type="hidden" name="select-groupWork" value="${editedTask.getGroupWorkId()}" >
+                                    </div>
+                                </div>
+                            </c:if>
+                            <c:if test="${loginUser.getRoleId()==1}">
+                                <div class="form-group">
+                                    <label class="col-sm-12" for="select-groupWork">Chọn dự án</label>
+                                    <div class="col-sm-12">
+                                        <select class="form-control form-control-line" name="select-groupWork" id="select-groupWork" required>
+                                            <c:forEach var="work" items="${listGroupWork}">
+                                                <option value="${work.getId()}">${work.getName()}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                            </c:if>
                             <div class="form-group">
-                                <label class="col-md-12" for="role-name">Tên quyền</label>
+                                <label class="col-md-12" for="task-name">Tên công việc</label>
                                 <div class="col-md-12">
-                                    <input type="text" placeholder="Nhập tên quyền mới"
-                                           class="form-control form-control-line" name="role-name" id="role-name" required/>
-                                    <input type="hidden" name="role-id" id="role-id" value="${editedRole.getId()}">
+                                    <input type="text" class="form-control form-control-line" placeholder="Nhập tên công việc mới"
+                                    name="task-name" id="task-name" required>
+                                    <input type="hidden" name="task-id" value="${editedTask.getId()}">
+                                    <input type="hidden" name="user-id" value="${editedTask.getUserId()}">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-12" for="description">Mô tả</label>
+                                <label class="col-md-12" for="start-date">Ngày bắt đầu</label>
+                                <input type="date" name="start-date" id="start-date"
+                                       class="form-control form-control-line" required >
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12" for="end-date">Ngày kết thúc</label>
+                                <input type="date" name="end-date" id="end-date"
+                                       class="form-control form-control-line" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12" for="select-status">Trạng thái</label>
                                 <div class="col-md-12">
-                                    <input type="text" placeholder="Nhập mô tả mới"
-                                           class="form-control form-control-line" name="description" id="description" required/>
+                                    <select class="form-control form-control-line" name="select-status" id="select-status" required>
+                                        <c:forEach var="status" items="${listStatus}">
+                                            <option value="${status.getId()}">${status.getName()}</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-success">Cập nhật</button>
-                                    <a href="<c:url value="/role"/>" class="btn btn-primary">Quay lại</a>
+                                    <button type="submit" class="btn btn-success">Lưu lại</button>
+                                    <a href="<c:url value="/task"/>" class="btn btn-primary">Quay lại</a>
                                 </div>
                             </div>
                         </form>
